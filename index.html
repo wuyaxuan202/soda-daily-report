@@ -67,102 +67,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans
 .spinner{width:14px;height:14px;border:2px solid #1e3a5f;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err{color:#f87171;font-size:12px}
-@media(max-width:600px){
-  .hdr,.sbar,.abox,.content,.status-bar,.ftr{padding-left:20px;padding-right:20px}
-  .sbar{margin-left:0;margin-right:0}
-  .abox{margin-left:0;margin-right:0}
-}
+@media(max-width:600px){.hdr,.sbar,.abox,.content,.status-bar,.ftr{padding-left:20px;padding-right:20px}.sbar{margin-left:0;margin-right:0}.abox{margin-left:0;margin-right:0}}
 </style>
 </head>
 <body>
-<div class="hdr">
-  <div class="hdr-top">
-    <div>
-      <div class="brand-lbl">加盟創業情報基地 · DAILY BRIEFING</div>
-      <div class="ttl">🧋 手搖飲 <span>×</span> 台股 每日情報</div>
-      <div class="meta" id="meta-date">載入中…</div>
-    </div>
-    <div class="badge" id="badge-date">📅 --/--/--</div>
-  </div>
-</div>
-<div class="sbar">
-  <div>
-    <div class="slbl">台股加權指數 TWSE</div>
-    <div class="sval" id="stock-val"><span class="spinner"></span></div>
-    <div class="ssub" id="stock-sub">台灣證券交易所</div>
-  </div>
-  <div style="flex:1"></div>
-  <button class="refresh-btn" onclick="loadAll()">🔄 重新整理</button>
-</div>
-<div class="abox">
-  <div class="abox-hdr">
-    <span style="font-size:20px">🧠</span>
-    <span class="abox-title">今日重點整理 · 產業分析</span>
-    <span class="ai-tag">AUTO ANALYSIS</span>
-  </div>
-  <div class="summary-text" id="summary-text"><span class="spinner" style="display:inline-block;margin-right:8px"></span> 分析中，請稍候…</div>
-  <div class="analysis-grid">
-    <div class="acard">
-      <div class="acard-title">📡 品牌熱度雷達（今日提及次數）</div>
-      <div id="brand-radar"><div class="loading"><span class="spinner"></span> 計算中…</div></div>
-    </div>
-    <div class="acard">
-      <div class="acard-title">📶 產業趨勢訊號</div>
-      <div style="margin-bottom:10px">
-        <div style="font-size:10px;color:#34d399;margin-bottom:6px;font-weight:600">✅ 機會訊號</div>
-        <div class="signals-wrap" id="sig-pos"><span class="sig-none">偵測中…</span></div>
-      </div>
-      <div style="margin-bottom:10px">
-        <div style="font-size:10px;color:#f87171;margin-bottom:6px;font-weight:600">⚠️ 警示訊號</div>
-        <div class="signals-wrap" id="sig-neg"><span class="sig-none">偵測中…</span></div>
-      </div>
-      <div>
-        <div style="font-size:10px;color:#a78bfa;margin-bottom:6px;font-weight:600">🔮 趨勢焦點</div>
-        <div class="signals-wrap" id="sig-trend"><span class="sig-none">偵測中…</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="content">
-  <div class="grid">
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">🍊</span><span class="sec-title">產業動態</span><span class="sec-cnt" id="cnt1">—</span></div>
-      <div id="news1"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">🏠</span><span class="sec-title">品牌新聞</span><span class="sec-cnt" id="cnt2">—</span></div>
-      <div id="news2"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">📈</span><span class="sec-title">市場趨勢</span><span class="sec-cnt" id="cnt3">—</span></div>
-      <div id="news3"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">📉</span><span class="sec-title">台股飲料食品</span><span class="sec-cnt" id="cnt4">—</span></div>
-      <div id="news4"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-  </div>
-</div>
-<div class="status-bar">
-  <span class="status-dot"></span>
-  <span class="status-txt" id="status-txt">載入中…</span>
-  <span class="status-txt" id="status-time"></span>
-</div>
-<div class="ftr">TWSE + Google News 即時抓取 ｜ 每10分鐘自動更新 ｜ 加盟前請審慎評估 &copy; <span id="yr"></span></div>
+<div class="hdr"><div class="hdr-top"><div><div class="brand-lbl">FRANCHISE RESEARCH BASE DAILY BRIEFING</div><div class="ttl">BOBA TEA <span>x</span> TWSE DAILY INTEL</div><div class="meta" id="meta-date">Loading...</div></div><div class="badge" id="badge-date">DATE --/--/--</div></div></div>
+<div class="sbar"><div><div class="slbl">TWSE WEIGHTED INDEX</div><div class="sval" id="stock-val"><span class="spinner"></span></div><div class="ssub" id="stock-sub">Taiwan Stock Exchange</div></div><div style="flex:1"></div><button class="refresh-btn" onclick="loadAll()">Refresh</button></div>
+<div class="abox"><div class="abox-hdr"><span style="font-size:20px">INTEL</span><span class="abox-title">Daily Summary and Industry Analysis</span><span class="ai-tag">AUTO ANALYSIS</span></div><div class="summary-text" id="summary-text"><span class="spinner" style="display:inline-block;margin-right:8px"></span> Analyzing...</div><div class="analysis-grid"><div class="acard"><div class="acard-title">Brand Heat Radar - mentions today</div><div id="brand-radar"><div class="loading"><span class="spinner"></span> Calculating...</div></div></div><div class="acard"><div class="acard-title">Industry Trend Signals</div><div style="margin-bottom:10px"><div style="font-size:10px;color:#34d399;margin-bottom:6px;font-weight:600">OPPORTUNITY SIGNALS</div><div class="signals-wrap" id="sig-pos"><span class="sig-none">Detecting...</span></div></div><div style="margin-bottom:10px"><div style="font-size:10px;color:#f87171;margin-bottom:6px;font-weight:600">WARNING SIGNALS</div><div class="signals-wrap" id="sig-neg"><span class="sig-none">Detecting...</span></div></div><div><div style="font-size:10px;color:#a78bfa;margin-bottom:6px;font-weight:600">TREND FOCUS</div><div class="signals-wrap" id="sig-trend"><span class="sig-none">Detecting...</span></div></div></div></div></div>
+<div class="content"><div class="grid"><div><div class="sec-hdr"><span class="sec-ico">NEWS</span><span class="sec-title">Industry News</span><span class="sec-cnt" id="cnt1">-</span></div><div id="news1"><div class="loading"><span class="spinner"></span> Loading...</div></div></div><div><div class="sec-hdr"><span class="sec-ico">BRAND</span><span class="sec-title">Brand News</span><span class="sec-cnt" id="cnt2">-</span></div><div id="news2"><div class="loading"><span class="spinner"></span> Loading...</div></div></div><div><div class="sec-hdr"><span class="sec-ico">MARKET</span><span class="sec-title">Market Trends</span><span class="sec-cnt" id="cnt3">-</span></div><div id="news3"><div class="loading"><span class="spinner"></span> Loading...</div></div></div><div><div class="sec-hdr"><span class="sec-ico">STOCKS</span><span class="sec-title">Beverage Stocks</span><span class="sec-cnt" id="cnt4">-</span></div><div id="news4"><div class="loading"><span class="spinner"></span> Loading...</div></div></div></div></div>
+<div class="status-bar"><span class="status-dot"></span><span class="status-txt" id="status-txt">Loading...</span><span class="status-txt" id="status-time"></span></div>
+<div class="ftr">TWSE + Google News live | Auto-refresh 10min | (c) <span id="yr"></span></div>
 <script>
 function getTWNow(){const n=new Date(),t=new Date(n.getTime()+8*3600000);const y=t.getUTCFullYear(),m=String(t.getUTCMonth()+1).padStart(2,'0'),d=String(t.getUTCDate()).padStart(2,'0');const hh=String(t.getUTCHours()).padStart(2,'0'),mi=String(t.getUTCMinutes()).padStart(2,'0');return{y,dateStr:y+'/'+m+'/'+d,timeStr:hh+':'+mi};}
-function initDate(){const t=getTWNow();document.getElementById('meta-date').textContent=t.dateStr+'  ·  '+t.timeStr+' 台灣時間  ·  AI 自動彙整';document.getElementById('badge-date').textContent='📅 '+t.dateStr;document.getElementById('yr').textContent=t.y;}
+function initDate(){const t=getTWNow();document.getElementById('meta-date').textContent=t.dateStr+'  |  '+t.timeStr+' TW Time  |  AI Auto';document.getElementById('badge-date').textContent='DATE '+t.dateStr;document.getElementById('yr').textContent=t.y;}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function renderNews(items,cid,nid){const el=document.getElementById(cid),cnt=document.getElementById(nid);if(!items||!items.length){el.innerHTML='<div class="no-data">（今日暫無資料）</div>';cnt.textContent='0 則';return;}cnt.textContent=items.length+' 則';el.innerHTML=items.map(n=>'<div class="news-item"><a href="'+esc(n.link)+'" target="_blank" rel="noopener">'+esc(n.title)+'</a>'+(n.desc?'<div class="news-desc">'+esc(n.desc)+'</div>':'')+'<div class="news-meta">'+(n.source?esc(n.source)+'  ·  ':'')+esc(n.pubDate?n.pubDate.substring(0,16):'')+' </div></div>').join('');}
-async function loadStock(){const el=document.getElementById('stock-val');try{const r=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=1d&region=TW',{headers:{'Accept':'application/json'}});const d=await r.json();const meta=(((d.chart||{}).result)||[])[0]?.meta;if(meta&&meta.regularMarketPrice){const price=meta.regularMarketPrice;const prev=meta.previousClose||meta.chartPreviousClose||price;const diff=(price-prev).toFixed(2);const pct=((price-prev)/prev*100).toFixed(2);const arrow=diff>=0?'▲':'▼';el.textContent=price.toFixed(2)+' '+arrow+' '+Math.abs(diff)+' ('+(pct>=0?'+':'')+pct+'%)';document.getElementById('stock-sub').textContent='台股加權指數 · Yahoo Finance';el.style.color=diff>=0?'#34d399':'#f87171';}else{el.textContent='盤後或非交易時段';el.style.color='#64748b';}}catch(e){el.innerHTML='<span class="err">台股資料取得失敗</span>';}}
-async function fetchRSS(query){const rssUrl='https://news.google.com/rss/search?q='+encodeURIComponent(query)+'&hl=zh-TW&gl=TW&ceid=TW:zh-Hant';const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(rssUrl));const d=await r.json();const parser=new DOMParser();const xml=parser.parseFromString(d.contents,'text/xml');return Array.from(xml.querySelectorAll('item')).slice(0,5).map(item=>{const title=item.querySelector('title')?.textContent||'';const link=item.querySelector('link')?.nextSibling?.textContent||item.querySelector('link')?.textContent||'';const pubDate=item.querySelector('pubDate')?.textContent||'';const source=item.querySelector('source')?.textContent||'';const rawDesc=item.querySelector('description')?.textContent||'';const desc=rawDesc.replace(/<[^>]+>/g,'').replace(/s+/g,' ').trim().substring(0,120);return{title,link,pubDate,source,desc};}).filter(i=>i.title);}
-const BRANDS=[{name:'50嵐',patterns:[/50嵐/g]},{name:'CoCo',patterns:[/CoCo|coco都可/gi]},{name:'珍煮丹',patterns:[/珍煮丹/g]},{name:'迷客夏',patterns:[/迷客夏/g]},{name:'茶湯會',patterns:[/茶湯會/g]},{name:'清心',patterns:[/清心福全|清心/g]},{name:'一芳',patterns:[/一芳/g]},{name:'日出茶太',patterns:[/日出茶太|Chatime/gi]},{name:'麻古',patterns:[/麻古/g]},{name:'大苑子',patterns:[/大苑子/g]}];
-const SIGNALS={pos:['展店','加盟','成長','熱銷','突破','創新','新品','上市','合作','獲利','業績','獲獎','衝破','亮眼','暢銷','搶攻','拓點','佈局'],neg:['食安','違規','罰款','關店','倒閉','虧損','召回','缺貨','爭議','投訴','違法','勒令','停業','負面','危機','下滑'],trend:['無糖','低糖','健康','外送','數位','永續','環保','聯名','訂閱','AI','科技','減糖','植物','功能性','客製']};
-function runAnalysis(allItems){const corpus=allItems.map(i=>i.title+' '+(i.desc||'')).join(' ');const total=allItems.length;const brandData=BRANDS.map(b=>{const count=b.patterns.reduce((acc,p)=>acc+(corpus.match(new RegExp(p.source,p.flags))||[]).length,0);return{name:b.name,count};}).filter(b=>b.count>0).sort((a,b)=>b.count-a.count);const posFound=SIGNALS.pos.filter(w=>corpus.includes(w));const negFound=SIGNALS.neg.filter(w=>corpus.includes(w));const trendFound=SIGNALS.trend.filter(w=>corpus.includes(w));let parts=[];if(total===0){parts.push('今日尚無新聞資料，請稍後重試或按右上角重新整理。');}else{parts.push('今日共收錄 <strong>'+total+' 則</strong>產業情報。');if(brandData.length>0){const top=brandData[0];parts.push('話題最熱品牌為 <strong class="sig-pos">'+top.name+'</strong>（'+top.count+' 則提及）。');}else{parts.push('今日新聞以市場整體趨勢為主，各品牌個別報導較少。');}if(posFound.length>0){parts.push('市場出現 <span class="sig-pos">機會訊號</span>：'+posFound.slice(0,4).map(w=>'<strong>'+w+'</strong>').join('、')+'等關鍵字活躍，整體氛圍偏向積極擴張。');}if(negFound.length>0){parts.push('⚠️ 需留意 <span class="sig-neg">警示訊號</span>：'+negFound.slice(0,3).map(w=>'<strong>'+w+'</strong>').join('、')+'等相關報導出現，加盟前應深入了解背景。');}else{parts.push('今日未偵測到重大負面事件，市場環境相對穩定。');}if(trendFound.length>0){parts.push('當前趨勢焦點集中在 <span class="sig-trend">'+trendFound.slice(0,4).map(w=>'<strong>'+w+'</strong>').join('、')+'</span>，此方向值得加盟布局參考。');}}return{brandData,posFound,negFound,trendFound,summary:parts.join(' ')};}
-function renderAnalysis(result){document.getElementById('summary-text').innerHTML=result.summary||'（分析資料不足）';const radarEl=document.getElementById('brand-radar');if(result.brandData.length===0){radarEl.innerHTML='<span class="sig-none">今日新聞未偵測到特定品牌名稱</span>';}else{const max=result.brandData[0].count||1;radarEl.innerHTML=result.brandData.slice(0,8).map(b=>'<div class="brand-row"><span class="brand-name">'+esc(b.name)+'</span><div class="brand-bar-wrap"><div class="brand-bar" style="width:'+Math.round(b.count/max*100)+'%"></div></div><span class="brand-count">'+b.count+'</span></div>').join('');}const renderTags=(items,cls,fallback)=>items.length?items.map(w=>'<span class="sig-tag '+cls+'">'+esc(w)+'</span>').join(''):'<span class="sig-none">'+fallback+'</span>';document.getElementById('sig-pos').innerHTML=renderTags(result.posFound,'sig-pos-tag','今日無明顯機會訊號');document.getElementById('sig-neg').innerHTML=renderTags(result.negFound,'sig-neg-tag','✅ 今日無警示訊號');document.getElementById('sig-trend').innerHTML=renderTags(result.trendFound,'sig-trend-tag','今日趨勢訊號待偵測');}
-let _allItems=[];
-async function loadAll(){initDate();document.getElementById('status-txt').textContent='資料更新中…';document.getElementById('status-time').textContent='';document.getElementById('summary-text').innerHTML='<span class="spinner" style="display:inline-block;margin-right:8px"></span> 分析中，請稍候…';const queries=[{q:'手搖飲 加盟 產業',cid:'news1',nid:'cnt1'},{q:'50嵐 CoCo都可 珍煮丹 迷客夏 茶湯會',cid:'news2',nid:'cnt2'},{q:'台灣飲料市場 消費趨勢 手搖飲',cid:'news3',nid:'cnt3'},{q:'台股 飲料食品 股票',cid:'news4',nid:'cnt4'}];const results=await Promise.allSettled([loadStock(),...queries.map(({q,cid,nid})=>fetchRSS(q).then(items=>{renderNews(items,cid,nid);return items;}).catch(()=>{document.getElementById(cid).innerHTML='<div class="no-data err">資料載入失敗</div>';return[];}))]);_allItems=results.slice(1).map(r=>r.status==='fulfilled'?r.value:[]).flat();const analysis=runAnalysis(_allItems);renderAnalysis(analysis);const t=getTWNow();document.getElementById('status-txt').textContent='資料已更新';document.getElementById('status-time').textContent='最後更新：'+t.timeStr+' 台灣時間';}
+function renderNews(items,cid,nid){const el=document.getElementById(cid),cnt=document.getElementById(nid);if(!items||!items.length){el.innerHTML='<div class="no-data">(No data today)</div>';cnt.textContent='0';return;}cnt.textContent=items.length;el.innerHTML=items.map(n=>'<div class="news-item"><a href="'+esc(n.link)+'" target="_blank" rel="noopener">'+esc(n.title)+'</a>'+(n.desc?'<div class="news-desc">'+esc(n.desc)+'</div>':'')+'<div class="news-meta">'+(n.source?esc(n.source)+'  |  ':'')+esc(n.pubDate?n.pubDate.substring(0,16):'')+' </div></div>').join('');}
+async function loadStock(){const el=document.getElementById('stock-val');try{const u='https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=1d&region=TW';const r=await fetch('https://corsproxy.io/?'+encodeURIComponent(u));const d=await r.json();const meta=(((d.chart||{}).result)||[])[0]?.meta;if(meta&&meta.regularMarketPrice){const price=meta.regularMarketPrice;const prev=meta.previousClose||meta.chartPreviousClose||price;const diff=(price-prev).toFixed(2);const pct=((price-prev)/prev*100).toFixed(2);el.textContent=price.toFixed(2)+' '+(diff>=0?'+':'')+diff+' ('+(pct>=0?'+':'')+pct+'%)';document.getElementById('stock-sub').textContent='TWSE - Yahoo Finance';el.style.color=diff>=0?'#34d399':'#f87171';}else{el.textContent='After hours';el.style.color='#64748b';}}catch(e){el.innerHTML='<span class="err">Stock unavailable</span>';}}
+async function fetchRSS(q){const url='https://news.google.com/rss/search?q='+encodeURIComponent(q)+'&hl=zh-TW&gl=TW&ceid=TW:zh-Hant';const r=await fetch('https://corsproxy.io/?'+encodeURIComponent(url));const text=await r.text();const xml=new DOMParser().parseFromString(text,'text/xml');return Array.from(xml.querySelectorAll('item')).slice(0,5).map(item=>{const title=item.querySelector('title')?.textContent||'';const link=item.querySelector('link')?.nextSibling?.textContent||item.querySelector('link')?.textContent||'';const pubDate=item.querySelector('pubDate')?.textContent||'';const source=item.querySelector('source')?.textContent||'';const rawDesc=item.querySelector('description')?.textContent||'';const desc=rawDesc.replace(/<[^>]+>/g,'').replace(/s+/g,' ').trim().substring(0,120);return{title,link,pubDate,source,desc};}).filter(i=>i.title);}
+const BRANDS=[{name:'50lan',p:[/50嵐/g]},{name:'CoCo',p:[/CoCo/gi]},{name:'ZhenZhuDan',p:[/珍煮丹/g]},{name:'Milksha',p:[/迷客夏/g]},{name:'ChaTang',p:[/茶湯會/g]},{name:'QingXin',p:[/清心/g]},{name:'YiFang',p:[/一芳/g]},{name:'Chatime',p:[/日出茶太|Chatime/gi]},{name:'Magu',p:[/麓古/g]},{name:'Dayuan',p:[/大苑子/g]}];
+const SPOS=['expansion','franchise','growth','bestseller','new product','collab','profit','award','surge'];
+const SNEG=['food safety','violation','fine','closure','bankrupt','loss','recall','shortage','dispute'];
+const STREND=['sugar free','low sugar','health','delivery','digital','sustainable','collab','AI','tech'];
+function runAnalysis(all){const corpus=all.map(i=>i.title+' '+(i.desc||'')).join(' ').toLowerCase();const total=all.length;const brands=BRANDS.map(b=>{const count=b.p.reduce((a,p)=>a+(corpus.match(new RegExp(p.source,p.flags))||[]).length,0);return{name:b.name,count};}).filter(b=>b.count>0).sort((a,b)=>b.count-a.count);const pos=SPOS.filter(w=>corpus.includes(w));const neg=SNEG.filter(w=>corpus.includes(w));const trend=STREND.filter(w=>corpus.includes(w));const parts=[];if(total===0){parts.push('No data today. Please refresh.');}else{parts.push('Total <strong>'+total+' articles</strong> compiled today.');if(brands.length){parts.push('Top brand: <strong class="sig-pos">'+brands[0].name+'</strong> ('+brands[0].count+' mentions).');}else{parts.push('Focus on overall market trends today.');}if(pos.length){parts.push('<span class="sig-pos">Opportunities</span>: '+pos.slice(0,4).map(w=>'<strong>'+w+'</strong>').join(', ')+'.');}if(neg.length){parts.push('<span class="sig-neg">Warning</span>: '+neg.slice(0,3).map(w=>'<strong>'+w+'</strong>').join(', ')+' detected.');}else{parts.push('No major warnings today.');}if(trend.length){parts.push('<span class="sig-trend">Trends</span>: '+trend.slice(0,4).map(w=>'<strong>'+w+'</strong>').join(', ')+'.');}}return{brands,pos,neg,trend,summary:parts.join(' ')};}
+function renderAnalysis(r){document.getElementById('summary-text').innerHTML=r.summary||'(Insufficient data)';const el=document.getElementById('brand-radar');if(!r.brands.length){el.innerHTML='<span class="sig-none">No brand mentions today</span>';}else{const max=r.brands[0].count||1;el.innerHTML=r.brands.slice(0,8).map(b=>'<div class="brand-row"><span class="brand-name">'+esc(b.name)+'</span><div class="brand-bar-wrap"><div class="brand-bar" style="width:'+Math.round(b.count/max*100)+'%"></div></div><span class="brand-count">'+b.count+'</span></div>').join('');}const tags=(items,cls,fb)=>items.length?items.map(w=>'<span class="sig-tag '+cls+'">'+esc(w)+'</span>').join(''):'<span class="sig-none">'+fb+'</span>';document.getElementById('sig-pos').innerHTML=tags(r.pos,'sig-pos-tag','None today');document.getElementById('sig-neg').innerHTML=tags(r.neg,'sig-neg-tag','None');document.getElementById('sig-trend').innerHTML=tags(r.trend,'sig-trend-tag','Pending');}
+let _all=[];
+async function loadAll(){initDate();document.getElementById('status-txt').textContent='Updating...';document.getElementById('status-time').textContent='';document.getElementById('summary-text').innerHTML='<span class="spinner" style="display:inline-block;margin-right:8px"></span> Analyzing...';const Q=[{q:'hand shaken tea franchise industry Taiwan',c:'news1',n:'cnt1'},{q:'bubble tea brand Taiwan 50lan CoCo milksha',c:'news2',n:'cnt2'},{q:'Taiwan beverage market consumer trend',c:'news3',n:'cnt3'},{q:'Taiwan stock beverage food industry',c:'news4',n:'cnt4'}];const R=await Promise.allSettled([loadStock(),...Q.map(({q,c,n})=>fetchRSS(q).then(items=>{renderNews(items,c,n);return items;}).catch(()=>{document.getElementById(c).innerHTML='<div class="no-data err">Load failed</div>';return[];}))]);_all=R.slice(1).map(r=>r.status==='fulfilled'?r.value:[]).flat();renderAnalysis(runAnalysis(_all));const t=getTWNow();document.getElementById('status-txt').textContent='Updated';document.getElementById('status-time').textContent='Last: '+t.timeStr+' TW';}
 loadAll();setInterval(loadAll,10*60*1000);
 </script>
 </body>
-  </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </html>
