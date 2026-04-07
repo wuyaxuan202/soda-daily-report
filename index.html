@@ -294,31 +294,33 @@ function initDate() {
 }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ══ CORS Proxy（四路備援，自動切換） ══
-// Google News RSS 須透過瀏覽器端 proxy 才能跨域存取
+// ══ CORS Proxy（四路並行，搶先回應贏） ══
+// 同時送出所有 proxy 請求，最快的那個直接用，手機也不卡
 const PROXIES = [
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://proxy.cors.sh/${url}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
-let proxyIdx = 0;
 
 async function fetchWithProxy(url) {
-  const total = PROXIES.length;
-  for (let i = 0; i < total; i++) {
-    const idx = (proxyIdx + i) % total;
-    try {
-      const r = await fetch(PROXIES[idx](url), { signal: AbortSignal.timeout(9000) });
-      if (r.ok) {
-        proxyIdx = idx;
-        document.getElementById('proxy-warn').classList.remove('show');
-        return await r.text();
-      }
-    } catch(e) {}
+  const ctrl = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), 12000); // 整體最多等 12 秒
+  try {
+    const text = await Promise.any(
+      PROXIES.map(p =>
+        fetch(p(url), { signal: ctrl.signal })
+          .then(r => { if (!r.ok) throw new Error('non-ok'); return r.text(); })
+      )
+    );
+    clearTimeout(timeout);
+    document.getElementById('proxy-warn').classList.remove('show');
+    return text;
+  } catch(e) {
+    clearTimeout(timeout);
+    document.getElementById('proxy-warn').classList.add('show');
+    throw new Error('All proxies failed');
   }
-  document.getElementById('proxy-warn').classList.add('show');
-  throw new Error('All proxies failed');
 }
 
 // ══ Render news ══
