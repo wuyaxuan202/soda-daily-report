@@ -5,178 +5,438 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>手搖飲情報日報</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
-/* ── Header ── */
-.hdr{background:linear-gradient(135deg,#1e3a5f,#0f172a);padding:28px 40px;border-bottom:1px solid #1e293b}
-.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px}
-.brand-lbl{font-size:11px;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
-.ttl{font-size:24px;font-weight:700;color:#f1f5f9;line-height:1.2}
-.ttl span{color:#3b82f6}
-.meta{font-size:12px;color:#64748b;margin-top:6px}
-.badge{background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;white-space:nowrap}
-/* ── Stock bar ── */
-.sbar{background:#0f2744;border:1px solid #1e3a5f;border-radius:10px;padding:16px 28px;margin:20px 40px 0;display:flex;align-items:center;gap:32px;flex-wrap:wrap}
-.slbl{color:#64748b;font-size:11px;letter-spacing:1px;text-transform:uppercase}
-.sval{color:#34d399;font-size:22px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
-.ssub{color:#64748b;font-size:11px;margin-top:3px}
-.refresh-btn{margin-left:auto;background:#1e3a5f;color:#93c5fd;border:1px solid #3b82f6;padding:5px 16px;border-radius:12px;font-size:11px;cursor:pointer;transition:background .2s;white-space:nowrap}
-.refresh-btn:hover{background:#1e4976}
-/* ── Analysis box ── */
-.abox{margin:20px 40px 0;background:linear-gradient(135deg,#0f1f3d,#0f172a);border:1px solid #2563eb;border-radius:12px;padding:24px 28px}
-.abox-hdr{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #1e293b}
-.abox-title{font-size:15px;font-weight:700;color:#f1f5f9}
-.ai-tag{background:#1d4ed8;color:#bfdbfe;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;letter-spacing:.5px}
-.summary-text{font-size:13px;color:#cbd5e1;line-height:1.8;background:#0a1628;border-radius:8px;padding:14px 18px;margin-bottom:20px}
-.summary-text strong{color:#60a5fa}
-.summary-text .sig-pos{color:#34d399;font-weight:600}
-.summary-text .sig-neg{color:#f87171;font-weight:600}
-.summary-text .sig-trend{color:#a78bfa;font-weight:600}
-.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:700px){.analysis-grid{grid-template-columns:1fr}}
-.acard{background:#0a1628;border-radius:8px;padding:16px}
-.acard-title{font-size:11px;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;font-weight:600}
-/* Brand radar */
-.brand-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.brand-name{font-size:12px;color:#cbd5e1;width:60px;flex-shrink:0}
-.brand-bar-wrap{flex:1;background:#1e293b;border-radius:4px;height:8px;overflow:hidden}
-.brand-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,#2563eb,#60a5fa);transition:width .6s ease}
-.brand-count{font-size:11px;color:#64748b;width:28px;text-align:right;flex-shrink:0}
-/* Signal tags */
-.signals-wrap{display:flex;flex-wrap:wrap;gap:6px}
-.sig-tag{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600}
-.sig-pos-tag{background:#052e16;color:#34d399;border:1px solid #166534}
-.sig-neg-tag{background:#2d0a0a;color:#f87171;border:1px solid #7f1d1d}
-.sig-trend-tag{background:#1e1b4b;color:#a78bfa;border:1px solid #3730a3}
-.sig-none{color:#475569;font-size:12px}
-/* ── Main content ── */
-.content{padding:28px 40px;max-width:1100px;margin:0 auto}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:768px){.grid{grid-template-columns:1fr}}
-.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #1e293b}
-.sec-ico{font-size:17px}
-.sec-title{font-size:14px;font-weight:700;color:#f1f5f9}
-.sec-cnt{font-size:11px;color:#64748b;margin-left:auto;background:#1e293b;padding:2px 10px;border-radius:10px}
-.news-item{margin-bottom:10px;padding:12px 14px;background:#1e293b;border-left:3px solid #3b82f6;border-radius:6px;transition:border-color .2s}
-.news-item:hover{border-left-color:#60a5fa}
-.news-item a{color:#e2e8f0;font-size:13px;font-weight:600;text-decoration:none;line-height:1.5;display:block}
-.news-item a:hover{color:#93c5fd}
-.news-desc{margin-top:5px;font-size:11px;color:#94a3b8;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.news-meta{margin-top:4px;color:#64748b;font-size:10px}
-.no-data{color:#475569;font-size:13px;padding:12px;text-align:center;background:#1e293b;border-radius:6px}
-/* ── Status / footer ── */
-.status-bar{background:#0f172a;border-top:1px solid #1e293b;padding:10px 40px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.status-dot{width:8px;height:8px;border-radius:50%;background:#34d399;display:inline-block;animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.status-txt{font-size:11px;color:#64748b}
-.ftr{text-align:center;padding:20px 40px;color:#334155;font-size:11px;border-top:1px solid #1e293b;margin-top:20px}
-/* ── Helpers ── */
-.loading{color:#64748b;font-size:13px;display:flex;align-items:center;gap:8px}
-.spinner{width:14px;height:14px;border:2px solid #1e3a5f;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;flex-shrink:0}
-@keyframes spin{to{transform:rotate(360deg)}}
-.err{color:#f87171;font-size:12px}
-@media(max-width:600px){
-  .hdr,.sbar,.abox,.content,.status-bar,.ftr{padding-left:20px;padding-right:20px}
-  .sbar{margin-left:0;margin-right:0}
-  .abox{margin-left:0;margin-right:0}
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f8f8f6;
+  --surface:   #ffffff;
+  --border:    #e8e8e4;
+  --muted:     #9a9a94;
+  --text:      #1a1a18;
+  --text-sub:  #6b6b65;
+  --accent:    #2c5282;
+  --accent-lt: #ebf0fa;
+  --green:     #2d6a4f;
+  --green-bg:  #edf7f2;
+  --red:       #9b2335;
+  --red-bg:    #fdf0f2;
+  --purple:    #553c9a;
+  --purple-bg: #f2f0fa;
+  --radius:    10px;
+  --shadow:    0 1px 4px rgba(0,0,0,.06), 0 2px 12px rgba(0,0,0,.04);
 }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── Layout ── */
+.wrap   { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* ── Header ── */
+.hdr {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.hdr-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.hdr-left {}
+.brand-eyebrow {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.hdr-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.3px;
+}
+.hdr-title span { color: var(--accent); }
+.hdr-meta {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.hdr-right { display: flex; align-items: center; gap: 10px; }
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-lt);
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.refresh-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 5px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.refresh-btn:hover { background: var(--surface); border-color: var(--accent); color: var(--accent); }
+
+/* ── Stock Bar ── */
+.stock-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin: 20px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow);
+}
+.stock-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.stock-val   { font-size: 22px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+.stock-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.stock-divider { width: 1px; height: 36px; background: var(--border); }
+@media (max-width: 480px) { .stock-divider { display: none; } }
+
+/* ── Analysis Box ── */
+.abox {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-top: 16px;
+  box-shadow: var(--shadow);
+}
+.abox-hdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.abox-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.ai-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-lt);
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+.summary-text {
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.75;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.summary-text strong { color: var(--accent); }
+.summary-text .sig-pos { color: var(--green); font-weight: 600; }
+.summary-text .sig-neg { color: var(--red);   font-weight: 600; }
+.summary-text .sig-trend { color: var(--purple); font-weight: 600; }
+
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .analysis-grid { grid-template-columns: 1fr; } }
+
+.acard { background: var(--bg); border-radius: 8px; padding: 14px 16px; }
+.acard-title {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* Brand radar */
+.brand-row   { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.brand-name  { font-size: 12px; color: var(--text-sub); width: 56px; flex-shrink: 0; }
+.brand-bar-wrap {
+  flex: 1;
+  background: var(--border);
+  border-radius: 3px;
+  height: 6px;
+  overflow: hidden;
+}
+.brand-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), #63b3ed);
+  transition: width .5s ease;
+}
+.brand-count { font-size: 11px; color: var(--muted); width: 24px; text-align: right; flex-shrink: 0; }
+
+/* Signal tags */
+.signals-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+.sig-group-label {
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  margin-top: 8px;
+}
+.sig-group-label.pos   { color: var(--green); }
+.sig-group-label.neg   { color: var(--red); }
+.sig-group-label.trend { color: var(--purple); }
+.sig-tag     { font-size: 11px; padding: 3px 9px; border-radius: 10px; font-weight: 500; }
+.sig-pos-tag   { background: var(--green-bg);  color: var(--green); }
+.sig-neg-tag   { background: var(--red-bg);    color: var(--red); }
+.sig-trend-tag { background: var(--purple-bg); color: var(--purple); }
+.sig-none    { font-size: 12px; color: var(--muted); }
+
+/* ── News Section ── */
+.main-content { padding: 20px 0 40px; }
+
+.sec-hdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sec-ico   { font-size: 15px; }
+.sec-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.sec-cnt   { font-size: 10px; color: var(--muted); margin-left: auto; background: var(--bg); padding: 2px 9px; border-radius: 10px; }
+
+.news-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.news-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.news-item:last-child { border-bottom: none; padding-bottom: 0; }
+.news-item a {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: 1.5;
+  display: block;
+  transition: color .15s;
+}
+.news-item a:hover { color: var(--accent); }
+.news-desc {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-sub);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.news-meta { margin-top: 5px; font-size: 10px; color: var(--muted); }
+.no-data   { font-size: 12px; color: var(--muted); padding: 12px 0; text-align: center; }
+
+/* ── Status Bar ── */
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(248,248,246,.92);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  z-index: 20;
+}
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+/* ── Footer ── */
+.ftr {
+  text-align: center;
+  padding: 16px 24px 52px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .3px;
+}
+
+/* ── Helpers ── */
+.loading { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; padding: 16px 0; justify-content: center; }
+.spinner {
+  width: 14px; height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.err { color: var(--red); font-size: 12px; }
+
+/* ── Section spacing ── */
+.section-block { margin-bottom: 16px; }
 </style>
 </head>
 <body>
 
-<!-- ══ Header ══ -->
-<div class="hdr">
-  <div class="hdr-top">
-    <div>
-      <div class="brand-lbl">加盟創業情報基地 · DAILY BRIEFING</div>
-      <div class="ttl">🧋 手搖飲 <span>×</span> 台股 每日情報</div>
-      <div class="meta" id="meta-date">載入中…</div>
-    </div>
-    <div class="badge" id="badge-date">📅 --/--/--</div>
-  </div>
-</div>
-
-<!-- ══ Stock bar ══ -->
-<div class="sbar">
-  <div>
-    <div class="slbl">台股加權指數 TWSE</div>
-    <div class="sval" id="stock-val"><span class="spinner"></span></div>
-    <div class="ssub" id="stock-sub">台灣證券交易所</div>
-  </div>
-  <div style="flex:1"></div>
-  <button class="refresh-btn" onclick="loadAll()">🔄 重新整理</button>
-</div>
-
-<!-- ══ Analysis Box ══ -->
-<div class="abox">
-  <div class="abox-hdr">
-    <span style="font-size:20px">🧠</span>
-    <span class="abox-title">今日重點整理 · 產業分析</span>
-    <span class="ai-tag">AUTO ANALYSIS</span>
-  </div>
-
-  <!-- Summary text -->
-  <div class="summary-text" id="summary-text">
-    <span class="spinner" style="display:inline-block;margin-right:8px"></span> 分析中，請稍候…
-  </div>
-
-  <!-- Brand radar + signals -->
-  <div class="analysis-grid">
-    <div class="acard">
-      <div class="acard-title">📡 品牌熱度雷達（今日提及次數）</div>
-      <div id="brand-radar"><div class="loading"><span class="spinner"></span> 計算中…</div></div>
-    </div>
-    <div class="acard">
-      <div class="acard-title">📶 產業趨勢訊號</div>
-      <div style="margin-bottom:10px">
-        <div style="font-size:10px;color:#34d399;margin-bottom:6px;font-weight:600">✅ 機會訊號</div>
-        <div class="signals-wrap" id="sig-pos"><span class="sig-none">偵測中…</span></div>
+<!-- ▌Header ▐ -->
+<header class="hdr">
+  <div class="wrap">
+    <div class="hdr-inner">
+      <div class="hdr-left">
+        <div class="brand-eyebrow">加盟創業研究基地 · Daily Briefing</div>
+        <div class="hdr-title">🧋 手搖飲 <span>×</span> 市場情報</div>
+        <div class="hdr-meta" id="meta-date">載入中…</div>
       </div>
-      <div style="margin-bottom:10px">
-        <div style="font-size:10px;color:#f87171;margin-bottom:6px;font-weight:600">⚠️ 警示訊號</div>
-        <div class="signals-wrap" id="sig-neg"><span class="sig-none">偵測中…</span></div>
+      <div class="hdr-right">
+        <span class="badge" id="badge-date">📅 --/--/--</span>
+        <button class="refresh-btn" onclick="loadAll()">↻ 更新資料</button>
       </div>
+    </div>
+
+    <!-- Stock Bar inside header -->
+    <div class="stock-bar">
       <div>
-        <div style="font-size:10px;color:#a78bfa;margin-bottom:6px;font-weight:600">🔮 趨勢焦點</div>
-        <div class="signals-wrap" id="sig-trend"><span class="sig-none">偵測中…</span></div>
+        <div class="stock-label">台股加權指數 TWSE</div>
+        <div class="stock-val" id="stock-val"><span class="spinner"></span></div>
+        <div class="stock-sub" id="stock-sub">資料載入中…</div>
+      </div>
+      <div class="stock-divider"></div>
+      <div style="flex:1; min-width:0;">
+        <div class="stock-label">今日資料來源</div>
+        <div style="font-size:12px; color:var(--text-sub); margin-top:3px;">Yahoo Finance · Google News RSS · 自動每 10 分鐘更新</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ▌Analysis Box ▐ -->
+<div class="wrap">
+  <div class="abox" style="margin-top:20px;">
+    <div class="abox-hdr">
+      <span style="font-size:18px;">🤖</span>
+      <span class="abox-title">今日產業分析 · 品牌聲量摘要</span>
+      <span class="ai-tag">AUTO ANALYSIS</span>
+    </div>
+
+    <div class="summary-text" id="summary-text">
+      <span class="spinner" style="display:inline-block;margin-right:8px;"></span> 分析中，請稍候…
+    </div>
+
+    <div class="analysis-grid">
+      <div class="acard">
+        <div class="acard-title">📡 品牌聲量雷達（本日新聞提及次數）</div>
+        <div id="brand-radar"><div class="loading"><span class="spinner"></span> 計算中…</div></div>
+      </div>
+      <div class="acard">
+        <div class="acard-title">📶 市場信號偵測</div>
+        <div>
+          <div class="sig-group-label pos">✅ 正向信號</div>
+          <div class="signals-wrap" id="sig-pos"><span class="sig-none">分析中…</span></div>
+          <div class="sig-group-label neg" style="margin-top:10px;">⚠️ 警示信號</div>
+          <div class="signals-wrap" id="sig-neg"><span class="sig-none">分析中…</span></div>
+          <div class="sig-group-label trend" style="margin-top:10px;">💡 趨勢關鍵詞</div>
+          <div class="signals-wrap" id="sig-trend"><span class="sig-none">分析中…</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ▌News Grid ▐ -->
+  <div class="main-content">
+    <div class="grid-2">
+      <div class="section-block">
+        <div class="news-card">
+          <div class="sec-hdr">
+            <span class="sec-ico">🔥</span>
+            <span class="sec-title">產業動態</span>
+            <span class="sec-cnt" id="cnt1">—</span>
+          </div>
+          <div id="news1"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
+        </div>
+      </div>
+      <div class="section-block">
+        <div class="news-card">
+          <div class="sec-hdr">
+            <span class="sec-ico">🏪</span>
+            <span class="sec-title">品牌新聞</span>
+            <span class="sec-cnt" id="cnt2">—</span>
+          </div>
+          <div id="news2"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
+        </div>
+      </div>
+      <div class="section-block">
+        <div class="news-card">
+          <div class="sec-hdr">
+            <span class="sec-ico">📊</span>
+            <span class="sec-title">市場趨勢</span>
+            <span class="sec-cnt" id="cnt3">—</span>
+          </div>
+          <div id="news3"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
+        </div>
+      </div>
+      <div class="section-block">
+        <div class="news-card">
+          <div class="sec-hdr">
+            <span class="sec-ico">📈</span>
+            <span class="sec-title">股市與餐飲產業</span>
+            <span class="sec-cnt" id="cnt4">—</span>
+          </div>
+          <div id="news4"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ News Grid ══ -->
-<div class="content">
-  <div class="grid">
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">🍊</span><span class="sec-title">產業動態</span><span class="sec-cnt" id="cnt1">—</span></div>
-      <div id="news1"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">🏠</span><span class="sec-title">品牌新聞</span><span class="sec-cnt" id="cnt2">—</span></div>
-      <div id="news2"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">📈</span><span class="sec-title">市場趨勢</span><span class="sec-cnt" id="cnt3">—</span></div>
-      <div id="news3"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-    <div>
-      <div class="sec-hdr"><span class="sec-ico">📉</span><span class="sec-title">台股飲料食品</span><span class="sec-cnt" id="cnt4">—</span></div>
-      <div id="news4"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-    </div>
-  </div>
-</div>
-
+<!-- ▌Status Bar ▐ -->
 <div class="status-bar">
   <span class="status-dot"></span>
-  <span class="status-txt" id="status-txt">載入中…</span>
-  <span class="status-txt" id="status-time"></span>
+  <span id="status-txt">載入中…</span>
+  <span id="status-time" style="margin-left:auto;"></span>
 </div>
-<div class="ftr">TWSE + Google News 即時抓取 ｜ 每10分鐘自動更新 ｜ 加盟前請審慎評估 &copy; <span id="yr"></span></div>
+
+<div class="ftr">TWSE + Google News 資料自動彙整 ｜ 每10分鐘自動更新 ｜ 加盟創業研究基地 &copy; <span id="yr"></span></div>
 
 <script>
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  Time helpers
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 function getTWNow() {
   const n = new Date(), t = new Date(n.getTime() + 8 * 3600000);
   const y = t.getUTCFullYear(), m = String(t.getUTCMonth()+1).padStart(2,'0'), d = String(t.getUTCDate()).padStart(2,'0');
@@ -185,25 +445,25 @@ function getTWNow() {
 }
 function initDate() {
   const t = getTWNow();
-  document.getElementById('meta-date').textContent = `${t.dateStr}  ·  ${t.timeStr} 台灣時間  ·  AI 自動彙整`;
+  document.getElementById('meta-date').textContent = `${t.dateStr}  ·  ${t.timeStr} 台灣時間  ·  AI 情報分析`;
   document.getElementById('badge-date').textContent = `📅 ${t.dateStr}`;
   document.getElementById('yr').textContent = t.y;
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  HTML escape
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ════════════════════════════════════
-//  Render news items (with description)
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
+//  Render news items
+// ══════════════════════════════════════════════════
 function renderNews(items, cid, nid) {
   const el = document.getElementById(cid), cnt = document.getElementById(nid);
   if (!items || !items.length) {
-    el.innerHTML = '<div class="no-data">（今日暫無資料）</div>';
+    el.innerHTML = '<div class="no-data">（本日暫無相關新聞）</div>';
     cnt.textContent = '0 則';
     return;
   }
@@ -216,9 +476,9 @@ function renderNews(items, cid, nid) {
     </div>`).join('');
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  Fetch Taiwan stock (Yahoo Finance)
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 async function loadStock() {
   const el = document.getElementById('stock-val');
   try {
@@ -234,19 +494,19 @@ async function loadStock() {
       const arrow = diff >= 0 ? '▲' : '▼';
       el.textContent = `${price.toFixed(2)} ${arrow} ${Math.abs(diff)} (${(pct>=0?'+':'')+pct}%)`;
       document.getElementById('stock-sub').textContent = '台股加權指數 · Yahoo Finance';
-      el.style.color = diff >= 0 ? '#34d399' : '#f87171';
+      el.style.color = diff >= 0 ? 'var(--green)' : 'var(--red)';
     } else {
-      el.textContent = '盤後或非交易時段';
-      el.style.color = '#64748b';
+      el.textContent = '市場資料暫無法取得';
+      el.style.color = 'var(--muted)';
     }
   } catch(e) {
-    el.innerHTML = '<span class="err">台股資料取得失敗</span>';
+    el.innerHTML = '<span class="err">指數載入失敗</span>';
   }
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  Fetch RSS via corsproxy.io
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 async function fetchRSS(query) {
   const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;
   const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(rssUrl));
@@ -255,7 +515,6 @@ async function fetchRSS(query) {
   const xml = parser.parseFromString(text, 'text/xml');
   return Array.from(xml.querySelectorAll('item')).slice(0, 5).map(item => {
     const title   = item.querySelector('title')?.textContent || '';
-    // Extract link — corsproxy.io may strip protocol/host, so fallback to <guid>
     const rawLink = item.querySelector('link')?.nextSibling?.textContent || item.querySelector('link')?.textContent || '';
     const guidUrl = item.querySelector('guid')?.textContent || '';
     let link = (rawLink.startsWith('http') ? rawLink : '') || (guidUrl.startsWith('http') ? guidUrl : '');
@@ -265,76 +524,72 @@ async function fetchRSS(query) {
     }
     const pubDate = item.querySelector('pubDate')?.textContent || '';
     const source  = item.querySelector('source')?.textContent || '';
-    // Extract description and strip HTML tags
     const rawDesc = item.querySelector('description')?.textContent || '';
     const desc    = rawDesc.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().substring(0, 120);
     return { title, link, pubDate, source, desc };
   }).filter(i => i.title);
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  Analysis engine
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 const BRANDS = [
   { name: '50嵐',   patterns: [/50嵐/g] },
-  { name: 'CoCo',   patterns: [/CoCo|coco都可/gi] },
+  { name: 'CoCo',   patterns: [/CoCo|coco|都可/gi] },
+  { name: '清心福全', patterns: [/清心福全/g] },
   { name: '珍煮丹', patterns: [/珍煮丹/g] },
-  { name: '迷客夏', patterns: [/迷客夏/g] },
   { name: '茶湯會', patterns: [/茶湯會/g] },
-  { name: '清心',   patterns: [/清心福全|清心/g] },
+  { name: '迷客夏', patterns: [/迷客夏|Milksha/g] },
   { name: '一芳',   patterns: [/一芳/g] },
-  { name: '日出茶太', patterns: [/日出茶太|Chatime/gi] },
-  { name: '麻古',   patterns: [/麻古/g] },
-  { name: '大苑子', patterns: [/大苑子/g] },
+  { name: '春水堂Chatime', patterns: [/春水堂|Chatime/gi] },
+  { name: '貢茶',   patterns: [/貢茶/g] },
+  { name: '鮮芋仙', patterns: [/鮮芋仙/g] },
 ];
 
 const SIGNALS = {
-  pos: ['展店','加盟','成長','熱銷','突破','創新','新品','上市','合作','獲利','業績','獲獎','衝破','亮眼','暢銷','搶攻','拓點','佈局'],
-  neg: ['食安','違規','罰款','關店','倒閉','虧損','召回','缺貨','爭議','投訴','違法','勒令','停業','負面','危機','下滑'],
-  trend: ['無糖','低糖','健康','外送','數位','永續','環保','聯名','訂閱','AI','科技','減糖','植物','功能性','客製'],
+  pos: ['展店','擴展','成長','獲利','投資','上市','新品','拓展','品質','獲獎','加盟','崛起','商機','熱銷','暢銷'],
+  neg: ['食安','事故','罰款','倒閉','糾紛','投訴','違規','汙染','過期','起火','裁員','虧損','撤出','結束','紛爭','下架'],
+  trend: ['永續','數位化','健康','少糖','植物','綠色','科技','線上','訂閱','AI','聯名','環保','減糖','多元化','整合'],
 };
 
 function runAnalysis(allItems) {
   const corpus = allItems.map(i => `${i.title} ${i.desc||''}`).join(' ');
   const total = allItems.length;
 
-  // ── Brand counts ──
   const brandData = BRANDS.map(b => {
     const count = b.patterns.reduce((acc, p) => acc + (corpus.match(new RegExp(p.source, p.flags))||[]).length, 0);
     return { name: b.name, count };
   }).filter(b => b.count > 0).sort((a,b) => b.count - a.count);
 
-  // ── Signals ──
   const posFound   = SIGNALS.pos.filter(w => corpus.includes(w));
   const negFound   = SIGNALS.neg.filter(w => corpus.includes(w));
   const trendFound = SIGNALS.trend.filter(w => corpus.includes(w));
 
-  // ── Summary ──
   let parts = [];
   if (total === 0) {
-    parts.push('今日尚無新聞資料，請稍後重試或按右上角重新整理。');
+    parts.push('今日新聞載入中，請稍後重新整理或確認網路狀態。');
   } else {
-    parts.push(`今日共收錄 <strong>${total} 則</strong>產業情報。`);
+    parts.push(`今日共彙整 <strong>${total} 則</strong>手搖飲相關新聞。`);
 
     if (brandData.length > 0) {
       const top = brandData[0];
-      parts.push(`話題最熱品牌為 <strong class="sig-pos">${top.name}</strong>（${top.count} 則提及）。`);
+      parts.push(`聲量最高品牌為 <strong class="sig-pos">${top.name}</strong>（${top.count} 則）。`);
     } else {
-      parts.push('今日新聞以市場整體趨勢為主，各品牌個別報導較少。');
+      parts.push('今日新聞無特定品牌集中提及，市場關注分散或以類別新聞為主。');
     }
 
     if (posFound.length > 0) {
-      parts.push(`市場出現 <span class="sig-pos">機會訊號</span>：${posFound.slice(0,4).map(w=>`<strong>${w}</strong>`).join('、')}等關鍵字活躍，整體氛圍偏向積極擴張。`);
+      parts.push(`市場出現 <span class="sig-pos">正向信號</span>：${posFound.slice(0,4).map(w=>`<strong>${w}</strong>`).join('、')}，投資加盟時機值得關注。`);
     }
 
     if (negFound.length > 0) {
-      parts.push(`⚠️ 需留意 <span class="sig-neg">警示訊號</span>：${negFound.slice(0,3).map(w=>`<strong>${w}</strong>`).join('、')}等相關報導出現，加盟前應深入了解背景。`);
+      parts.push(`⚠️ 偵測到 <span class="sig-neg">風險信號</span>：${negFound.slice(0,3).map(w=>`<strong>${w}</strong>`).join('、')}，選定品牌與展店地點時需審慎評估。`);
     } else {
-      parts.push('今日未偵測到重大負面事件，市場環境相對穩定。');
+      parts.push('今日未偵測到明顯負面風險信號，市場環境相對穩定。');
     }
 
     if (trendFound.length > 0) {
-      parts.push(`當前趨勢焦點集中在 <span class="sig-trend">${trendFound.slice(0,4).map(w=>`<strong>${w}</strong>`).join('、')}</span>，此方向值得加盟布局參考。`);
+      parts.push(`近期趨勢關鍵詞集中於 <span class="sig-trend">${trendFound.slice(0,4).map(w=>`<strong>${w}</strong>`).join('、')}</span>，此方向的加盟品牌更具成長潛力。`);
     }
   }
 
@@ -342,13 +597,11 @@ function runAnalysis(allItems) {
 }
 
 function renderAnalysis(result) {
-  // Summary
-  document.getElementById('summary-text').innerHTML = result.summary || '（分析資料不足）';
+  document.getElementById('summary-text').innerHTML = result.summary || '（分析結果暫時無法顯示）';
 
-  // Brand radar
   const radarEl = document.getElementById('brand-radar');
   if (result.brandData.length === 0) {
-    radarEl.innerHTML = '<span class="sig-none">今日新聞未偵測到特定品牌名稱</span>';
+    radarEl.innerHTML = '<span class="sig-none">今日新聞未偵測到品牌名稱</span>';
   } else {
     const max = result.brandData[0].count || 1;
     radarEl.innerHTML = result.brandData.slice(0,8).map(b => `
@@ -361,19 +614,18 @@ function renderAnalysis(result) {
       </div>`).join('');
   }
 
-  // Signals
   const renderTags = (items, cls, fallback) => items.length
     ? items.map(w => `<span class="sig-tag ${cls}">${esc(w)}</span>`).join('')
     : `<span class="sig-none">${fallback}</span>`;
 
-  document.getElementById('sig-pos').innerHTML   = renderTags(result.posFound,   'sig-pos-tag',   '今日無明顯機會訊號');
-  document.getElementById('sig-neg').innerHTML   = renderTags(result.negFound,   'sig-neg-tag',   '✅ 今日無警示訊號');
-  document.getElementById('sig-trend').innerHTML = renderTags(result.trendFound, 'sig-trend-tag', '今日趨勢訊號待偵測');
+  document.getElementById('sig-pos').innerHTML   = renderTags(result.posFound,   'sig-pos-tag',   '今日無正向信號');
+  document.getElementById('sig-neg').innerHTML   = renderTags(result.negFound,   'sig-neg-tag',   '✅ 今日無警示信號');
+  document.getElementById('sig-trend').innerHTML = renderTags(result.trendFound, 'sig-trend-tag', '今日無趨勢信號');
 }
 
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 //  Load all data
-// ════════════════════════════════════
+// ══════════════════════════════════════════════════
 let _allItems = [];
 
 async function loadAll() {
@@ -381,14 +633,13 @@ async function loadAll() {
   document.getElementById('status-txt').textContent = '資料更新中…';
   document.getElementById('status-time').textContent = '';
 
-  // Reset analysis to loading state
-  document.getElementById('summary-text').innerHTML = '<span class="spinner" style="display:inline-block;margin-right:8px"></span> 分析中，請稍候…';
+  document.getElementById('summary-text').innerHTML = '<span class="spinner" style="display:inline-block;margin-right:8px;"></span> 分析中，請稍候…';
 
   const queries = [
-    { q: '手搖飲 加盟 產業',                 cid: 'news1', nid: 'cnt1' },
-    { q: '50嵐 CoCo都可 珍煮丹 迷客夏 茶湯會', cid: 'news2', nid: 'cnt2' },
-    { q: '台灣飲料市場 消費趨勢 手搖飲',       cid: 'news3', nid: 'cnt3' },
-    { q: '台股 飲料食品 股票',                cid: 'news4', nid: 'cnt4' },
+    { q: '手搖飲 加盟 產業',                       cid: 'news1', nid: 'cnt1' },
+    { q: '50嵐 CoCo都可 珍煮丹 迷客夏', cid: 'news2', nid: 'cnt2' },
+    { q: '台灣消費 飲料市場 手搖飲',     cid: 'news3', nid: 'cnt3' },
+    { q: '台股 飲料 餐飲股票',            cid: 'news4', nid: 'cnt4' },
   ];
 
   const results = await Promise.allSettled([
@@ -399,12 +650,10 @@ async function loadAll() {
     )
   ]);
 
-  // Collect all items for analysis
   _allItems = results.slice(1)
     .map(r => r.status === 'fulfilled' ? r.value : [])
     .flat();
 
-  // Run & render analysis
   const analysis = runAnalysis(_allItems);
   renderAnalysis(analysis);
 
