@@ -72,7 +72,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans
 .ftr{text-align:center;padding:20px 40px;color:#334155;font-size:11px;border-top:1px solid #1e293b;margin-top:20px}
 /* ── Helpers ── */
 .loading{color:#64748b;font-size:13px;display:flex;align-items:center;gap:8px}
-.spinner{width:14px;height:14px;border:2px solid #1e3a5f;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;flex-shrink:0}
+.spinner{width:14px;height:14px;border:2px solid #1e3a5f;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;lex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .err{color:#f87171;font-size:12px}
 @media(max-width:600px){
@@ -80,7 +80,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans
   .sbar{margin-left:0;margin-right:0}
   .abox{margin-left:0;margin-right:0}
 }
-</style>
+</pw�le>
 </head>
 <body>
 
@@ -88,11 +88,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans
 <div class="hdr">
   <div class="hdr-top">
     <div>
-      <div class="brand-lbl">加盟創業情報基地 · DAILY BRIEFING</div>
-      <div class="ttl">🧋 手搖飲 <span>×</span> 台股 每日情報</div>
+      <div class="brand-lbl">删曟創椭情報基֜w · DAILY BRIEFING</div>
+      <div class="ttl">🧋 手搖棲 <span>×</span> 台股 每日情報/div>
       <div class="meta" id="meta-date">載入中…</div>
     </div>
-    <div class="badge" id="badge-date">📅 --/--/--</div>
+    <div class="badge" id="badge-date">📅  --/--/--</div>
   </div>
 </div>
 
@@ -255,7 +255,14 @@ async function fetchRSS(query) {
   const xml = parser.parseFromString(text, 'text/xml');
   return Array.from(xml.querySelectorAll('item')).slice(0, 5).map(item => {
     const title   = item.querySelector('title')?.textContent || '';
-    const link    = item.querySelector('link')?.nextSibling?.textContent || item.querySelector('link')?.textContent || '';
+    // Extract link — corsproxy.io may strip protocol/host, so fallback to <guid>
+    const rawLink = item.querySelector('link')?.nextSibling?.textContent || item.querySelector('link')?.textContent || '';
+    const guidUrl = item.querySelector('guid')?.textContent || '';
+    let link = (rawLink.startsWith('http') ? rawLink : '') || (guidUrl.startsWith('http') ? guidUrl : '');
+    if (!link) {
+      const id = rawLink || guidUrl;
+      link = id ? 'https://news.google.com/articles/' + id : '';
+    }
     const pubDate = item.querySelector('pubDate')?.textContent || '';
     const source  = item.querySelector('source')?.textContent || '';
     // Extract description and strip HTML tags
