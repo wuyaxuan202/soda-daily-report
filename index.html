@@ -297,10 +297,10 @@ function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 // ══ CORS Proxy（四路備援，自動切換） ══
 // Google News RSS 須透過瀏覽器端 proxy 才能跨域存取
 const PROXIES = [
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://proxy.cors.sh/${url}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 let proxyIdx = 0;
 
@@ -358,9 +358,7 @@ async function loadStock() {
   const el=document.getElementById('stock-val');
   try {
     const yahooUrl='https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=1d&region=TW';
-    const stockProxy=`https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
-    const stockRes=await fetch(stockProxy,{signal:AbortSignal.timeout(8000)});
-    const text=await stockRes.text();
+    const text=await fetchWithProxy(yahooUrl);
     const d=JSON.parse(text);
     const meta=(((d.chart||{}).result)||[])[0]?.meta;
     if(meta&&meta.regularMarketPrice){
