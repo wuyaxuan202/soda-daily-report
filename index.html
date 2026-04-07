@@ -5,666 +5,717 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>手搖飲情報日報</title>
 <style>
-/* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:        #f8f8f6;
-  --surface:   #ffffff;
-  --border:    #e8e8e4;
-  --muted:     #9a9a94;
-  --text:      #1a1a18;
-  --text-sub:  #6b6b65;
-  --accent:    #2c5282;
-  --accent-lt: #ebf0fa;
-  --green:     #2d6a4f;
-  --green-bg:  #edf7f2;
-  --red:       #9b2335;
-  --red-bg:    #fdf0f2;
-  --purple:    #553c9a;
-  --purple-bg: #f2f0fa;
-  --radius:    10px;
-  --shadow:    0 1px 4px rgba(0,0,0,.06), 0 2px 12px rgba(0,0,0,.04);
+  --bg:#f8f8f6; --surface:#ffffff; --border:#e8e8e4; --muted:#9a9a94;
+  --text:#1a1a18; --text-sub:#6b6b65; --accent:#2c5282; --accent-lt:#ebf0fa;
+  --green:#2d6a4f; --green-bg:#edf7f2; --red:#9b2335; --red-bg:#fdf0f2;
+  --purple:#553c9a; --purple-bg:#f2f0fa; --orange:#92400e; --orange-bg:#fffbeb;
+  --radius:10px; --shadow:0 1px 4px rgba(0,0,0,.06),0 2px 12px rgba(0,0,0,.04);
 }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.6; }
+.wrap   { max-width:1080px; margin:0 auto; padding:0 24px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:720px){ .grid-2{ grid-template-columns:1fr; } }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  font-size: 14px;
-  line-height: 1.6;
-}
+/* Header */
+.hdr { background:var(--surface); border-bottom:1px solid var(--border); padding:18px 0 0; position:sticky; top:0; z-index:10; }
+.hdr-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding-bottom:14px; }
+.brand-eyebrow { font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted); margin-bottom:3px; }
+.hdr-title { font-size:19px; font-weight:700; color:var(--text); letter-spacing:-.3px; }
+.hdr-title span { color:var(--accent); }
+.hdr-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+.hdr-right { display:flex; align-items:center; gap:8px; }
+.badge { font-size:11px; font-weight:600; color:var(--accent); background:var(--accent-lt); padding:4px 12px; border-radius:20px; white-space:nowrap; }
+.refresh-btn { font-size:11px; font-weight:600; color:var(--text-sub); background:transparent; border:1px solid var(--border); padding:5px 14px; border-radius:20px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.refresh-btn:hover { border-color:var(--accent); color:var(--accent); }
 
-/* ── Layout ── */
-.wrap   { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+/* Nav tabs */
+.nav-tabs { display:flex; gap:0; border-top:1px solid var(--border); }
+.nav-tab { font-size:12px; font-weight:600; color:var(--muted); padding:8px 18px; cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; background:none; border-top:none; border-left:none; border-right:none; }
+.nav-tab:hover { color:var(--text); }
+.nav-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
 
-/* ── Header ── */
-.hdr {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 20px 0 16px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.hdr-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.hdr-left {}
-.brand-eyebrow {
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 4px;
-}
-.hdr-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -.3px;
-}
-.hdr-title span { color: var(--accent); }
-.hdr-meta {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 3px;
-}
-.hdr-right { display: flex; align-items: center; gap: 10px; }
-.badge {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--accent-lt);
-  padding: 4px 12px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-.refresh-btn {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-sub);
-  background: transparent;
-  border: 1px solid var(--border);
-  padding: 5px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all .2s;
-  white-space: nowrap;
-}
-.refresh-btn:hover { background: var(--surface); border-color: var(--accent); color: var(--accent); }
+/* Section visibility */
+.section { display:none; } .section.active { display:block; }
 
-/* ── Stock Bar ── */
-.stock-bar {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 20px;
-  margin: 20px 0 0;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  box-shadow: var(--shadow);
-}
-.stock-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
-.stock-val   { font-size: 22px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
-.stock-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.stock-divider { width: 1px; height: 36px; background: var(--border); }
-@media (max-width: 480px) { .stock-divider { display: none; } }
+/* Stock bar */
+.stock-bar { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 20px; margin-top:16px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; box-shadow:var(--shadow); }
+.stock-label { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+.stock-val { font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; }
+.stock-sub { font-size:10px; color:var(--muted); margin-top:1px; }
+.sdivider { width:1px; height:34px; background:var(--border); }
+@media(max-width:480px){ .sdivider{display:none;} }
 
-/* ── Analysis Box ── */
-.abox {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 22px;
-  margin-top: 16px;
-  box-shadow: var(--shadow);
-}
-.abox-hdr {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.abox-title { font-size: 13px; font-weight: 700; color: var(--text); }
-.ai-tag {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-lt);
-  padding: 2px 7px;
-  border-radius: 6px;
-}
-.summary-text {
-  font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.75;
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-}
-.summary-text strong { color: var(--accent); }
-.summary-text .sig-pos { color: var(--green); font-weight: 600; }
-.summary-text .sig-neg { color: var(--red);   font-weight: 600; }
-.summary-text .sig-trend { color: var(--purple); font-weight: 600; }
+/* Analysis box */
+.abox { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; margin-top:14px; box-shadow:var(--shadow); }
+.abox-hdr { display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.abox-title { font-size:13px; font-weight:700; }
+.ai-tag { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--accent); background:var(--accent-lt); padding:2px 7px; border-radius:6px; }
+.proxy-warn { font-size:11px; color:var(--orange); background:var(--orange-bg); border:1px solid #fcd34d; border-radius:6px; padding:6px 12px; margin-bottom:10px; display:none; }
+.proxy-warn.show { display:block; }
+.summary-text { font-size:13px; color:var(--text-sub); line-height:1.75; background:var(--bg); border-radius:8px; padding:10px 14px; margin-bottom:14px; }
+.summary-text strong { color:var(--accent); }
+.summary-text .sig-pos { color:var(--green); font-weight:600; }
+.summary-text .sig-neg { color:var(--red); font-weight:600; }
+.summary-text .sig-trend { color:var(--purple); font-weight:600; }
+.analysis-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media(max-width:640px){ .analysis-grid{grid-template-columns:1fr;} }
+.acard { background:var(--bg); border-radius:8px; padding:12px 14px; }
+.acard-title { font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:10px; }
+.brand-row { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+.brand-name { font-size:12px; color:var(--text-sub); width:54px; flex-shrink:0; }
+.brand-bar-wrap { flex:1; background:var(--border); border-radius:3px; height:5px; overflow:hidden; }
+.brand-bar { height:5px; border-radius:3px; background:linear-gradient(90deg,var(--accent),#63b3ed); transition:width .5s ease; }
+.brand-count { font-size:11px; color:var(--muted); width:22px; text-align:right; flex-shrink:0; }
+.signals-wrap { display:flex; flex-wrap:wrap; gap:4px; }
+.sig-group-label { font-size:10px; font-weight:600; margin-bottom:5px; margin-top:7px; }
+.sig-group-label.pos{ color:var(--green); } .sig-group-label.neg{ color:var(--red); } .sig-group-label.trend{ color:var(--purple); }
+.sig-tag { font-size:11px; padding:2px 8px; border-radius:10px; font-weight:500; }
+.sig-pos-tag { background:var(--green-bg); color:var(--green); }
+.sig-neg-tag { background:var(--red-bg); color:var(--red); }
+.sig-trend-tag { background:var(--purple-bg); color:var(--purple); }
+.sig-none { font-size:11px; color:var(--muted); }
 
-.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 640px) { .analysis-grid { grid-template-columns: 1fr; } }
+/* News */
+.main-content { padding:16px 0 50px; }
+.sec-hdr { display:flex; align-items:center; gap:8px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.sec-ico { font-size:14px; } .sec-title { font-size:13px; font-weight:700; }
+.sec-cnt { font-size:10px; color:var(--muted); margin-left:auto; background:var(--bg); padding:2px 8px; border-radius:10px; }
+.news-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); }
+.news-item { padding:9px 0; border-bottom:1px solid var(--border); }
+.news-item:last-child { border-bottom:none; padding-bottom:0; }
+.news-item a { color:var(--text); font-size:13px; font-weight:600; text-decoration:none; line-height:1.5; display:block; transition:color .15s; }
+.news-item a:hover { color:var(--accent); }
+.news-desc { margin-top:3px; font-size:11px; color:var(--text-sub); line-height:1.55; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.news-meta { margin-top:4px; font-size:10px; color:var(--muted); }
+.no-data { font-size:12px; color:var(--muted); padding:10px 0; text-align:center; }
+.section-block { margin-bottom:14px; }
 
-.acard { background: var(--bg); border-radius: 8px; padding: 14px 16px; }
-.acard-title {
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-weight: 700;
-  margin-bottom: 12px;
-}
+/* ── Brand Profiles ── */
+.brand-profiles { padding:16px 0 50px; }
+.bp-search { display:flex; gap:8px; margin-bottom:16px; }
+.bp-search input { flex:1; border:1px solid var(--border); border-radius:8px; padding:8px 14px; font-size:13px; color:var(--text); background:var(--surface); outline:none; transition:border-color .15s; }
+.bp-search input:focus { border-color:var(--accent); }
+.bp-filter { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+.bp-filter-btn { font-size:11px; font-weight:600; padding:4px 12px; border-radius:16px; border:1px solid var(--border); background:var(--surface); color:var(--text-sub); cursor:pointer; transition:all .15s; }
+.bp-filter-btn.active, .bp-filter-btn:hover { background:var(--accent-lt); border-color:var(--accent); color:var(--accent); }
+.brand-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); margin-bottom:14px; cursor:pointer; transition:border-color .2s; }
+.brand-card:hover { border-color:var(--accent); }
+.brand-card-header { display:flex; align-items:flex-start; gap:14px; margin-bottom:12px; }
+.brand-avatar { width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.brand-card-info { flex:1; min-width:0; }
+.brand-card-name { font-size:15px; font-weight:700; color:var(--text); }
+.brand-card-tagline { font-size:11px; color:var(--muted); margin-top:1px; }
+.brand-card-badges { display:flex; gap:5px; flex-wrap:wrap; margin-top:5px; }
+.brand-badge { font-size:10px; font-weight:600; padding:2px 8px; border-radius:8px; }
+.badge-scale { background:#e0f2fe; color:#0369a1; }
+.badge-franchise { background:#dcfce7; color:#15803d; }
+.badge-premium { background:#fef3c7; color:#92400e; }
+.badge-intl { background:#ede9fe; color:#6d28d9; }
+.badge-budget { background:#f0fdf4; color:#166534; }
 
-/* Brand radar */
-.brand-row   { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.brand-name  { font-size: 12px; color: var(--text-sub); width: 56px; flex-shrink: 0; }
-.brand-bar-wrap {
-  flex: 1;
-  background: var(--border);
-  border-radius: 3px;
-  height: 6px;
-  overflow: hidden;
-}
-.brand-bar {
-  height: 6px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--accent), #63b3ed);
-  transition: width .5s ease;
-}
-.brand-count { font-size: 11px; color: var(--muted); width: 24px; text-align: right; flex-shrink: 0; }
+.brand-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+@media(max-width:500px){ .brand-metrics{ grid-template-columns:1fr 1fr; } }
+.metric-box { background:var(--bg); border-radius:8px; padding:10px 12px; }
+.metric-label { font-size:10px; color:var(--muted); letter-spacing:.5px; margin-bottom:3px; }
+.metric-value { font-size:15px; font-weight:700; color:var(--text); }
+.metric-sub { font-size:10px; color:var(--muted); margin-top:1px; }
 
-/* Signal tags */
-.signals-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
-.sig-group-label {
-  font-size: 10px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  margin-top: 8px;
-}
-.sig-group-label.pos   { color: var(--green); }
-.sig-group-label.neg   { color: var(--red); }
-.sig-group-label.trend { color: var(--purple); }
-.sig-tag     { font-size: 11px; padding: 3px 9px; border-radius: 10px; font-weight: 500; }
-.sig-pos-tag   { background: var(--green-bg);  color: var(--green); }
-.sig-neg-tag   { background: var(--red-bg);    color: var(--red); }
-.sig-trend-tag { background: var(--purple-bg); color: var(--purple); }
-.sig-none    { font-size: 12px; color: var(--muted); }
+.brand-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media(max-width:500px){ .brand-detail-grid{ grid-template-columns:1fr; } }
+.detail-box { background:var(--bg); border-radius:8px; padding:10px 12px; }
+.detail-title { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:8px; }
+.detail-items { display:flex; flex-direction:column; gap:4px; }
+.detail-item { display:flex; justify-content:space-between; align-items:center; font-size:12px; }
+.detail-item-name { color:var(--text-sub); }
+.detail-item-val { font-weight:600; color:var(--text); }
+.detail-bar-wrap { flex:1; background:var(--border); border-radius:3px; height:4px; overflow:hidden; margin:0 8px; }
+.detail-bar { height:4px; border-radius:3px; background:linear-gradient(90deg,var(--accent),#63b3ed); }
+.region-item { display:flex; align-items:center; gap:6px; font-size:12px; margin-bottom:5px; }
+.region-name { width:32px; color:var(--text-sub); flex-shrink:0; }
+.region-bar-wrap { flex:1; background:var(--border); border-radius:3px; height:5px; overflow:hidden; }
+.region-bar { height:5px; border-radius:3px; background:linear-gradient(90deg,var(--green),#34d399); }
+.region-pct { font-size:11px; color:var(--muted); width:32px; text-align:right; flex-shrink:0; }
 
-/* ── News Section ── */
-.main-content { padding: 20px 0 40px; }
+.franchise-box { background:var(--accent-lt); border:1px solid #bfdbfe; border-radius:8px; padding:10px 14px; margin-top:10px; }
+.franchise-title { font-size:10px; font-weight:700; color:var(--accent); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+.franchise-row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; border-bottom:1px solid rgba(59,130,246,.1); }
+.franchise-row:last-child { border-bottom:none; }
+.franchise-key { color:var(--text-sub); }
+.franchise-val { font-weight:600; color:var(--text); }
 
-.sec-hdr {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.sec-ico   { font-size: 15px; }
-.sec-title { font-size: 13px; font-weight: 700; color: var(--text); }
-.sec-cnt   { font-size: 10px; color: var(--muted); margin-left: auto; background: var(--bg); padding: 2px 9px; border-radius: 10px; }
-
-.news-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow);
-}
-
-.news-item {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-}
-.news-item:last-child { border-bottom: none; padding-bottom: 0; }
-.news-item a {
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  line-height: 1.5;
-  display: block;
-  transition: color .15s;
-}
-.news-item a:hover { color: var(--accent); }
-.news-desc {
-  margin-top: 4px;
-  font-size: 11px;
-  color: var(--text-sub);
-  line-height: 1.55;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.news-meta { margin-top: 5px; font-size: 10px; color: var(--muted); }
-.no-data   { font-size: 12px; color: var(--muted); padding: 12px 0; text-align: center; }
-
-/* ── Status Bar ── */
-.status-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0; right: 0;
-  background: rgba(248,248,246,.92);
-  backdrop-filter: blur(8px);
-  border-top: 1px solid var(--border);
-  padding: 8px 24px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--muted);
-  z-index: 20;
-}
-.status-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--green);
-  flex-shrink: 0;
-  animation: pulse 2.5s ease-in-out infinite;
-}
+/* Status */
+.status-bar { position:fixed; bottom:0; left:0; right:0; background:rgba(248,248,246,.9); backdrop-filter:blur(8px); border-top:1px solid var(--border); padding:7px 24px; display:flex; align-items:center; gap:8px; font-size:11px; color:var(--muted); z-index:20; }
+.status-dot { width:7px; height:7px; border-radius:50%; background:var(--green); flex-shrink:0; animation:pulse 2.5s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
-
-/* ── Footer ── */
-.ftr {
-  text-align: center;
-  padding: 16px 24px 52px;
-  color: var(--muted);
-  font-size: 10px;
-  letter-spacing: .3px;
-}
-
-/* ── Helpers ── */
-.loading { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; padding: 16px 0; justify-content: center; }
-.spinner {
-  width: 14px; height: 14px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.err { color: var(--red); font-size: 12px; }
-
-/* ── Section spacing ── */
-.section-block { margin-bottom: 16px; }
+.ftr { text-align:center; padding:12px 24px 50px; color:var(--muted); font-size:10px; }
+.loading { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px; padding:14px 0; justify-content:center; }
+.spinner { width:13px; height:13px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; flex-shrink:0; }
+@keyframes spin { to{transform:rotate(360deg);} }
+.err { color:var(--red); font-size:12px; }
 </style>
 </head>
 <body>
 
-<!-- ▌Header ▐ -->
 <header class="hdr">
   <div class="wrap">
     <div class="hdr-inner">
-      <div class="hdr-left">
+      <div>
         <div class="brand-eyebrow">加盟創業研究基地 · Daily Briefing</div>
         <div class="hdr-title">🧋 手搖飲 <span>×</span> 市場情報</div>
         <div class="hdr-meta" id="meta-date">載入中…</div>
       </div>
       <div class="hdr-right">
         <span class="badge" id="badge-date">📅 --/--/--</span>
-        <button class="refresh-btn" onclick="loadAll()">↻ 更新資料</button>
+        <button class="refresh-btn" onclick="loadAll()">↻ 更新</button>
       </div>
     </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('news')">📰 每日新聞</button>
+      <button class="nav-tab" onclick="switchTab('brands')">🏪 品牌資料庫</button>
+    </nav>
+  </div>
+</header>
 
-    <!-- Stock Bar inside header -->
+<!-- ═══ TAB: 每日新聞 ═══ -->
+<div id="tab-news" class="section active">
+  <div class="wrap">
+
     <div class="stock-bar">
       <div>
         <div class="stock-label">台股加權指數 TWSE</div>
         <div class="stock-val" id="stock-val"><span class="spinner"></span></div>
-        <div class="stock-sub" id="stock-sub">資料載入中…</div>
+        <div class="stock-sub" id="stock-sub">載入中…</div>
       </div>
-      <div class="stock-divider"></div>
-      <div style="flex:1; min-width:0;">
-        <div class="stock-label">今日資料來源</div>
-        <div style="font-size:12px; color:var(--text-sub); margin-top:3px;">Yahoo Finance · Google News RSS · 自動每 10 分鐘更新</div>
+      <div class="sdivider"></div>
+      <div style="flex:1;min-width:0;">
+        <div class="stock-label">資料來源</div>
+        <div style="font-size:12px;color:var(--text-sub);margin-top:2px;">Yahoo Finance · Google News RSS · 每10分鐘自動更新</div>
       </div>
     </div>
-  </div>
-</header>
 
-<!-- ▌Analysis Box ▐ -->
-<div class="wrap">
-  <div class="abox" style="margin-top:20px;">
-    <div class="abox-hdr">
-      <span style="font-size:18px;">🤖</span>
-      <span class="abox-title">今日產業分析 · 品牌聲量摘要</span>
-      <span class="ai-tag">AUTO ANALYSIS</span>
-    </div>
-
-    <div class="summary-text" id="summary-text">
-      <span class="spinner" style="display:inline-block;margin-right:8px;"></span> 分析中，請稍候…
-    </div>
-
-    <div class="analysis-grid">
-      <div class="acard">
-        <div class="acard-title">📡 品牌聲量雷達（本日新聞提及次數）</div>
-        <div id="brand-radar"><div class="loading"><span class="spinner"></span> 計算中…</div></div>
+    <div class="abox">
+      <div class="abox-hdr">
+        <span style="font-size:17px;">🤖</span>
+        <span class="abox-title">今日產業分析 · 品牌聲量摘要</span>
+        <span class="ai-tag">AUTO ANALYSIS</span>
       </div>
-      <div class="acard">
-        <div class="acard-title">📶 市場信號偵測</div>
-        <div>
-          <div class="sig-group-label pos">✅ 正向信號</div>
+      <div class="proxy-warn" id="proxy-warn">⚠️ 新聞代理伺服器暫時不穩定，正在嘗試備用來源…若持續無法載入請稍後再試。</div>
+      <div class="summary-text" id="summary-text"><span class="spinner" style="display:inline-block;margin-right:8px;"></span> 分析中…</div>
+      <div class="analysis-grid">
+        <div class="acard">
+          <div class="acard-title">📡 品牌聲量雷達</div>
+          <div id="brand-radar"><div class="loading"><span class="spinner"></span></div></div>
+        </div>
+        <div class="acard">
+          <div class="acard-title">📶 市場信號</div>
+          <div class="sig-group-label pos">✅ 正向</div>
           <div class="signals-wrap" id="sig-pos"><span class="sig-none">分析中…</span></div>
-          <div class="sig-group-label neg" style="margin-top:10px;">⚠️ 警示信號</div>
+          <div class="sig-group-label neg">⚠️ 警示</div>
           <div class="signals-wrap" id="sig-neg"><span class="sig-none">分析中…</span></div>
-          <div class="sig-group-label trend" style="margin-top:10px;">💡 趨勢關鍵詞</div>
+          <div class="sig-group-label trend">💡 趨勢</div>
           <div class="signals-wrap" id="sig-trend"><span class="sig-none">分析中…</span></div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ▌News Grid ▐ -->
-  <div class="main-content">
-    <div class="grid-2">
-      <div class="section-block">
-        <div class="news-card">
-          <div class="sec-hdr">
-            <span class="sec-ico">🔥</span>
-            <span class="sec-title">產業動態</span>
-            <span class="sec-cnt" id="cnt1">—</span>
-          </div>
-          <div id="news1"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-        </div>
-      </div>
-      <div class="section-block">
-        <div class="news-card">
-          <div class="sec-hdr">
-            <span class="sec-ico">🏪</span>
-            <span class="sec-title">品牌新聞</span>
-            <span class="sec-cnt" id="cnt2">—</span>
-          </div>
-          <div id="news2"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-        </div>
-      </div>
-      <div class="section-block">
-        <div class="news-card">
-          <div class="sec-hdr">
-            <span class="sec-ico">📊</span>
-            <span class="sec-title">市場趨勢</span>
-            <span class="sec-cnt" id="cnt3">—</span>
-          </div>
-          <div id="news3"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-        </div>
-      </div>
-      <div class="section-block">
-        <div class="news-card">
-          <div class="sec-hdr">
-            <span class="sec-ico">📈</span>
-            <span class="sec-title">股市與餐飲產業</span>
-            <span class="sec-cnt" id="cnt4">—</span>
-          </div>
-          <div id="news4"><div class="loading"><span class="spinner"></span> 載入中…</div></div>
-        </div>
+    <div class="main-content">
+      <div class="grid-2">
+        <div class="section-block"><div class="news-card">
+          <div class="sec-hdr"><span class="sec-ico">🔥</span><span class="sec-title">產業動態</span><span class="sec-cnt" id="cnt1">—</span></div>
+          <div id="news1"><div class="loading"><span class="spinner"></span></div></div>
+        </div></div>
+        <div class="section-block"><div class="news-card">
+          <div class="sec-hdr"><span class="sec-ico">🏪</span><span class="sec-title">品牌新聞</span><span class="sec-cnt" id="cnt2">—</span></div>
+          <div id="news2"><div class="loading"><span class="spinner"></span></div></div>
+        </div></div>
+        <div class="section-block"><div class="news-card">
+          <div class="sec-hdr"><span class="sec-ico">📊</span><span class="sec-title">市場趨勢</span><span class="sec-cnt" id="cnt3">—</span></div>
+          <div id="news3"><div class="loading"><span class="spinner"></span></div></div>
+        </div></div>
+        <div class="section-block"><div class="news-card">
+          <div class="sec-hdr"><span class="sec-ico">📈</span><span class="sec-title">股市與餐飲</span><span class="sec-cnt" id="cnt4">—</span></div>
+          <div id="news4"><div class="loading"><span class="spinner"></span></div></div>
+        </div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ▌Status Bar ▐ -->
+<!-- ═══ TAB: 品牌資料庫 ═══ -->
+<div id="tab-brands" class="section">
+  <div class="wrap">
+    <div class="brand-profiles">
+
+      <div class="bp-search">
+        <input type="text" id="brand-search" placeholder="搜尋品牌名稱…" oninput="filterBrands()">
+      </div>
+      <div class="bp-filter">
+        <button class="bp-filter-btn active" onclick="setBpFilter('all',this)">全部</button>
+        <button class="bp-filter-btn" onclick="setBpFilter('franchise',this)">可加盟</button>
+        <button class="bp-filter-btn" onclick="setBpFilter('premium',this)">精品</button>
+        <button class="bp-filter-btn" onclick="setBpFilter('scale',this)">大規模</button>
+        <button class="bp-filter-btn" onclick="setBpFilter('intl',this)">國際品牌</button>
+      </div>
+      <div id="brand-list"></div>
+    </div>
+  </div>
+</div>
+
 <div class="status-bar">
   <span class="status-dot"></span>
   <span id="status-txt">載入中…</span>
   <span id="status-time" style="margin-left:auto;"></span>
 </div>
-
-<div class="ftr">TWSE + Google News 資料自動彙整 ｜ 每10分鐘自動更新 ｜ 加盟創業研究基地 &copy; <span id="yr"></span></div>
+<div class="ftr">TWSE + Google News 自動彙整 ｜ 加盟創業研究基地 &copy; <span id="yr"></span></div>
 
 <script>
-// ══════════════════════════════════════════════════
-//  Time helpers
-// ══════════════════════════════════════════════════
+// ══ Tab Switch ══
+function switchTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ══ Time helpers ══
 function getTWNow() {
-  const n = new Date(), t = new Date(n.getTime() + 8 * 3600000);
-  const y = t.getUTCFullYear(), m = String(t.getUTCMonth()+1).padStart(2,'0'), d = String(t.getUTCDate()).padStart(2,'0');
-  const hh = String(t.getUTCHours()).padStart(2,'0'), mi = String(t.getUTCMinutes()).padStart(2,'0');
-  return { y, dateStr: `${y}/${m}/${d}`, timeStr: `${hh}:${mi}` };
+  const n = new Date(), t = new Date(n.getTime() + 8*3600000);
+  const y=t.getUTCFullYear(), m=String(t.getUTCMonth()+1).padStart(2,'0'), d=String(t.getUTCDate()).padStart(2,'0');
+  const hh=String(t.getUTCHours()).padStart(2,'0'), mi=String(t.getUTCMinutes()).padStart(2,'0');
+  return { y, dateStr:`${y}/${m}/${d}`, timeStr:`${hh}:${mi}` };
 }
 function initDate() {
-  const t = getTWNow();
-  document.getElementById('meta-date').textContent = `${t.dateStr}  ·  ${t.timeStr} 台灣時間  ·  AI 情報分析`;
-  document.getElementById('badge-date').textContent = `📅 ${t.dateStr}`;
-  document.getElementById('yr').textContent = t.y;
+  const t=getTWNow();
+  document.getElementById('meta-date').textContent=`${t.dateStr}  ·  ${t.timeStr} 台灣時間  ·  AI 情報分析`;
+  document.getElementById('badge-date').textContent=`📅 ${t.dateStr}`;
+  document.getElementById('yr').textContent=t.y;
 }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ══════════════════════════════════════════════════
-//  HTML escape
-// ══════════════════════════════════════════════════
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+// ══ CORS Proxy with fallback ══
+const PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://proxy.cors.sh/${url}`,
+];
+let proxyIdx = 0;
 
-// ══════════════════════════════════════════════════
-//  Render news items
-// ══════════════════════════════════════════════════
-function renderNews(items, cid, nid) {
-  const el = document.getElementById(cid), cnt = document.getElementById(nid);
-  if (!items || !items.length) {
-    el.innerHTML = '<div class="no-data">（本日暫無相關新聞）</div>';
-    cnt.textContent = '0 則';
-    return;
+async function fetchWithProxy(url, retries=2) {
+  for (let attempt=0; attempt<=retries; attempt++) {
+    const idx = (proxyIdx + attempt) % PROXIES.length;
+    try {
+      const r = await fetch(PROXIES[idx](url), { signal: AbortSignal.timeout(8000) });
+      if (r.ok) {
+        proxyIdx = idx; // remember working proxy
+        document.getElementById('proxy-warn').classList.remove('show');
+        return await r.text();
+      }
+    } catch(e) {}
   }
-  cnt.textContent = `${items.length} 則`;
-  el.innerHTML = items.map(n => `
+  document.getElementById('proxy-warn').classList.add('show');
+  throw new Error('All proxies failed');
+}
+
+// ══ Render news ══
+function renderNews(items, cid, nid) {
+  const el=document.getElementById(cid), cnt=document.getElementById(nid);
+  if (!items||!items.length){ el.innerHTML='<div class="no-data">（本日暫無相關新聞）</div>'; cnt.textContent='0 則'; return; }
+  cnt.textContent=`${items.length} 則`;
+  el.innerHTML=items.map(n=>`
     <div class="news-item">
       <a href="${esc(n.link)}" target="_blank" rel="noopener">${esc(n.title)}</a>
-      ${n.desc ? `<div class="news-desc">${esc(n.desc)}</div>` : ''}
-      <div class="news-meta">${n.source ? esc(n.source) + '  ·  ' : ''}${esc(n.pubDate ? n.pubDate.substring(0,16) : '')}</div>
+      ${n.desc?`<div class="news-desc">${esc(n.desc)}</div>`:''}
+      <div class="news-meta">${n.source?esc(n.source)+'  ·  ':''  }${esc(n.pubDate?n.pubDate.substring(0,16):'')}</div>
     </div>`).join('');
 }
 
-// ══════════════════════════════════════════════════
-//  Fetch Taiwan stock (Yahoo Finance)
-// ══════════════════════════════════════════════════
-async function loadStock() {
-  const el = document.getElementById('stock-val');
-  try {
-    const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=1d&region=TW';
-    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(yahooUrl));
-    const d = await r.json();
-    const meta = (((d.chart||{}).result)||[])[0]?.meta;
-    if (meta && meta.regularMarketPrice) {
-      const price = meta.regularMarketPrice;
-      const prev  = meta.previousClose || meta.chartPreviousClose || price;
-      const diff  = (price - prev).toFixed(2);
-      const pct   = ((price - prev) / prev * 100).toFixed(2);
-      const arrow = diff >= 0 ? '▲' : '▼';
-      el.textContent = `${price.toFixed(2)} ${arrow} ${Math.abs(diff)} (${(pct>=0?'+':'')+pct}%)`;
-      document.getElementById('stock-sub').textContent = '台股加權指數 · Yahoo Finance';
-      el.style.color = diff >= 0 ? 'var(--green)' : 'var(--red)';
-    } else {
-      el.textContent = '市場資料暫無法取得';
-      el.style.color = 'var(--muted)';
-    }
-  } catch(e) {
-    el.innerHTML = '<span class="err">指數載入失敗</span>';
-  }
-}
-
-// ══════════════════════════════════════════════════
-//  Fetch RSS via corsproxy.io
-// ══════════════════════════════════════════════════
+// ══ Fetch RSS ══
 async function fetchRSS(query) {
-  const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;
-  const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(rssUrl));
-  const text = await r.text();
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(text, 'text/xml');
-  return Array.from(xml.querySelectorAll('item')).slice(0, 5).map(item => {
-    const title   = item.querySelector('title')?.textContent || '';
-    const rawLink = item.querySelector('link')?.nextSibling?.textContent || item.querySelector('link')?.textContent || '';
-    const guidUrl = item.querySelector('guid')?.textContent || '';
-    let link = (rawLink.startsWith('http') ? rawLink : '') || (guidUrl.startsWith('http') ? guidUrl : '');
-    if (!link) {
-      const id = rawLink || guidUrl;
-      link = id ? 'https://news.google.com/articles/' + id : '';
-    }
-    const pubDate = item.querySelector('pubDate')?.textContent || '';
-    const source  = item.querySelector('source')?.textContent || '';
-    const rawDesc = item.querySelector('description')?.textContent || '';
-    const desc    = rawDesc.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().substring(0, 120);
-    return { title, link, pubDate, source, desc };
-  }).filter(i => i.title);
+  const rssUrl=`https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`;
+  const text = await fetchWithProxy(rssUrl);
+  const xml=new DOMParser().parseFromString(text,'text/xml');
+  return Array.from(xml.querySelectorAll('item')).slice(0,5).map(item=>{
+    const title=item.querySelector('title')?.textContent||'';
+    const rawLink=item.querySelector('link')?.nextSibling?.textContent||item.querySelector('link')?.textContent||'';
+    const guidUrl=item.querySelector('guid')?.textContent||'';
+    let link=(rawLink.startsWith('http')?rawLink:'')||(guidUrl.startsWith('http')?guidUrl:'');
+    if(!link){ const id=rawLink||guidUrl; link=id?'https://news.google.com/articles/'+id:''; }
+    const pubDate=item.querySelector('pubDate')?.textContent||'';
+    const source=item.querySelector('source')?.textContent||'';
+    const rawDesc=item.querySelector('description')?.textContent||'';
+    const desc=rawDesc.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim().substring(0,120);
+    return {title,link,pubDate,source,desc};
+  }).filter(i=>i.title);
 }
 
-// ══════════════════════════════════════════════════
-//  Analysis engine
-// ══════════════════════════════════════════════════
-const BRANDS = [
-  { name: '50嵐',   patterns: [/50嵐/g] },
-  { name: 'CoCo',   patterns: [/CoCo|coco|都可/gi] },
-  { name: '清心福全', patterns: [/清心福全/g] },
-  { name: '珍煮丹', patterns: [/珍煮丹/g] },
-  { name: '茶湯會', patterns: [/茶湯會/g] },
-  { name: '迷客夏', patterns: [/迷客夏|Milksha/g] },
-  { name: '一芳',   patterns: [/一芳/g] },
-  { name: '春水堂Chatime', patterns: [/春水堂|Chatime/gi] },
-  { name: '貢茶',   patterns: [/貢茶/g] },
-  { name: '鮮芋仙', patterns: [/鮮芋仙/g] },
+// ══ Stock ══
+async function loadStock() {
+  const el=document.getElementById('stock-val');
+  try {
+    const yahooUrl='https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d&range=1d&region=TW';
+    const text = await fetchWithProxy(yahooUrl);
+    const d=JSON.parse(text);
+    const meta=(((d.chart||{}).result)||[])[0]?.meta;
+    if(meta&&meta.regularMarketPrice){
+      const price=meta.regularMarketPrice, prev=meta.previousClose||meta.chartPreviousClose||price;
+      const diff=(price-prev).toFixed(2), pct=((price-prev)/prev*100).toFixed(2);
+      el.textContent=`${price.toFixed(2)} ${diff>=0?'▲':'▼'} ${Math.abs(diff)} (${(pct>=0?'+':'')+pct}%)`;
+      document.getElementById('stock-sub').textContent='台股加權指數 · Yahoo Finance';
+      el.style.color=diff>=0?'var(--green)':'var(--red)';
+    } else { el.textContent='資料暫無法取得'; el.style.color='var(--muted)'; }
+  } catch(e){ el.innerHTML='<span class="err">指數載入失敗</span>'; }
+}
+
+// ══ Analysis engine ══
+const BRANDS_KW=[
+  {name:'50嵐',patterns:[/50嵐/g]},
+  {name:'CoCo',patterns:[/CoCo|coco|都可/gi]},
+  {name:'清心福全',patterns:[/清心福全/g]},
+  {name:'珍煮丹',patterns:[/珍煮丹/g]},
+  {name:'茶湯會',patterns:[/茶湯會/g]},
+  {name:'迷客夏',patterns:[/迷客夏|Milksha/g]},
+  {name:'一芳',patterns:[/一芳/g]},
+  {name:'春水堂',patterns:[/春水堂|Chatime/gi]},
+  {name:'貢茶',patterns:[/貢茶/g]},
+  {name:'鮮芋仙',patterns:[/鮮芋仙/g]},
 ];
-
-const SIGNALS = {
-  pos: ['展店','擴展','成長','獲利','投資','上市','新品','拓展','品質','獲獎','加盟','崛起','商機','熱銷','暢銷'],
-  neg: ['食安','事故','罰款','倒閉','糾紛','投訴','違規','汙染','過期','起火','裁員','虧損','撤出','結束','紛爭','下架'],
-  trend: ['永續','數位化','健康','少糖','植物','綠色','科技','線上','訂閱','AI','聯名','環保','減糖','多元化','整合'],
+const SIGNALS={
+  pos:['展店','擴展','成長','獲利','投資','上市','新品','拓展','品質','獲獎','加盟','崛起','商機','熱銷'],
+  neg:['食安','事故','罰款','倒閉','糾紛','投訴','違規','汙染','過期','起火','裁員','虧損','撤出','結束'],
+  trend:['永續','數位化','健康','少糖','植物','科技','線上','訂閱','AI','聯名','環保','減糖','整合'],
 };
-
-function runAnalysis(allItems) {
-  const corpus = allItems.map(i => `${i.title} ${i.desc||''}`).join(' ');
-  const total = allItems.length;
-
-  const brandData = BRANDS.map(b => {
-    const count = b.patterns.reduce((acc, p) => acc + (corpus.match(new RegExp(p.source, p.flags))||[]).length, 0);
-    return { name: b.name, count };
-  }).filter(b => b.count > 0).sort((a,b) => b.count - a.count);
-
-  const posFound   = SIGNALS.pos.filter(w => corpus.includes(w));
-  const negFound   = SIGNALS.neg.filter(w => corpus.includes(w));
-  const trendFound = SIGNALS.trend.filter(w => corpus.includes(w));
-
-  let parts = [];
-  if (total === 0) {
-    parts.push('今日新聞載入中，請稍後重新整理或確認網路狀態。');
-  } else {
-    parts.push(`今日共彙整 <strong>${total} 則</strong>手搖飲相關新聞。`);
-
-    if (brandData.length > 0) {
-      const top = brandData[0];
-      parts.push(`聲量最高品牌為 <strong class="sig-pos">${top.name}</strong>（${top.count} 則）。`);
-    } else {
-      parts.push('今日新聞無特定品牌集中提及，市場關注分散或以類別新聞為主。');
-    }
-
-    if (posFound.length > 0) {
-      parts.push(`市場出現 <span class="sig-pos">正向信號</span>：${posFound.slice(0,4).map(w=>`<strong>${w}</strong>`).join('、')}，投資加盟時機值得關注。`);
-    }
-
-    if (negFound.length > 0) {
-      parts.push(`⚠️ 偵測到 <span class="sig-neg">風險信號</span>：${negFound.slice(0,3).map(w=>`<strong>${w}</strong>`).join('、')}，選定品牌與展店地點時需審慎評估。`);
-    } else {
-      parts.push('今日未偵測到明顯負面風險信號，市場環境相對穩定。');
-    }
-
-    if (trendFound.length > 0) {
-      parts.push(`近期趨勢關鍵詞集中於 <span class="sig-trend">${trendFound.slice(0,4).map(w=>`<strong>${w}</strong>`).join('、')}</span>，此方向的加盟品牌更具成長潛力。`);
-    }
+function runAnalysis(items) {
+  const corpus=items.map(i=>`${i.title} ${i.desc||''}`).join(' ');
+  const brandData=BRANDS_KW.map(b=>({name:b.name,count:b.patterns.reduce((a,p)=>a+(corpus.match(new RegExp(p.source,p.flags))||[]).length,0)}))
+    .filter(b=>b.count>0).sort((a,b)=>b.count-a.count);
+  const posFound=SIGNALS.pos.filter(w=>corpus.includes(w));
+  const negFound=SIGNALS.neg.filter(w=>corpus.includes(w));
+  const trendFound=SIGNALS.trend.filter(w=>corpus.includes(w));
+  let parts=[];
+  const total=items.length;
+  if(!total){ parts.push('新聞載入中，請稍後重整。'); }
+  else {
+    parts.push(`今日彙整 <strong>${total} 則</strong>手搖飲相關新聞。`);
+    if(brandData.length>0) parts.push(`聲量最高：<strong class="sig-pos">${brandData[0].name}</strong>（${brandData[0].count} 則）。`);
+    if(posFound.length>0) parts.push(`正向信號：<span class="sig-pos">${posFound.slice(0,3).map(w=>`<strong>${w}</strong>`).join('、')}</span>。`);
+    if(negFound.length>0) parts.push(`⚠️ 警示：<span class="sig-neg">${negFound.slice(0,3).map(w=>`<strong>${w}</strong>`).join('、')}</span>，請審慎評估。`);
+    else parts.push('今日未偵測到明顯負面信號。');
+    if(trendFound.length>0) parts.push(`趨勢關鍵詞：<span class="sig-trend">${trendFound.slice(0,3).map(w=>`<strong>${w}</strong>`).join('、')}</span>。`);
   }
-
-  return { brandData, posFound, negFound, trendFound, summary: parts.join(' ') };
+  return {brandData,posFound,negFound,trendFound,summary:parts.join(' ')};
 }
-
-function renderAnalysis(result) {
-  document.getElementById('summary-text').innerHTML = result.summary || '（分析結果暫時無法顯示）';
-
-  const radarEl = document.getElementById('brand-radar');
-  if (result.brandData.length === 0) {
-    radarEl.innerHTML = '<span class="sig-none">今日新聞未偵測到品牌名稱</span>';
-  } else {
-    const max = result.brandData[0].count || 1;
-    radarEl.innerHTML = result.brandData.slice(0,8).map(b => `
+function renderAnalysis(r) {
+  document.getElementById('summary-text').innerHTML=r.summary||'（無法分析）';
+  const radarEl=document.getElementById('brand-radar');
+  if(!r.brandData.length){ radarEl.innerHTML='<span class="sig-none">今日未偵測到品牌名稱</span>'; }
+  else {
+    const max=r.brandData[0].count||1;
+    radarEl.innerHTML=r.brandData.slice(0,8).map(b=>`
       <div class="brand-row">
         <span class="brand-name">${esc(b.name)}</span>
-        <div class="brand-bar-wrap">
-          <div class="brand-bar" style="width:${Math.round(b.count/max*100)}%"></div>
-        </div>
+        <div class="brand-bar-wrap"><div class="brand-bar" style="width:${Math.round(b.count/max*100)}%"></div></div>
         <span class="brand-count">${b.count}</span>
       </div>`).join('');
   }
-
-  const renderTags = (items, cls, fallback) => items.length
-    ? items.map(w => `<span class="sig-tag ${cls}">${esc(w)}</span>`).join('')
-    : `<span class="sig-none">${fallback}</span>`;
-
-  document.getElementById('sig-pos').innerHTML   = renderTags(result.posFound,   'sig-pos-tag',   '今日無正向信號');
-  document.getElementById('sig-neg').innerHTML   = renderTags(result.negFound,   'sig-neg-tag',   '✅ 今日無警示信號');
-  document.getElementById('sig-trend').innerHTML = renderTags(result.trendFound, 'sig-trend-tag', '今日無趨勢信號');
+  const tags=(items,cls,fb)=>items.length?items.map(w=>`<span class="sig-tag ${cls}">${esc(w)}</span>`).join(''):`<span class="sig-none">${fb}</span>`;
+  document.getElementById('sig-pos').innerHTML=tags(r.posFound,'sig-pos-tag','今日無正向信號');
+  document.getElementById('sig-neg').innerHTML=tags(r.negFound,'sig-neg-tag','✅ 今日無警示');
+  document.getElementById('sig-trend').innerHTML=tags(r.trendFound,'sig-trend-tag','今日無趨勢信號');
 }
 
-// ══════════════════════════════════════════════════
-//  Load all data
-// ══════════════════════════════════════════════════
-let _allItems = [];
-
+// ══ Load all ══
+let _allItems=[];
 async function loadAll() {
   initDate();
-  document.getElementById('status-txt').textContent = '資料更新中…';
-  document.getElementById('status-time').textContent = '';
-
-  document.getElementById('summary-text').innerHTML = '<span class="spinner" style="display:inline-block;margin-right:8px;"></span> 分析中，請稍候…';
-
-  const queries = [
-    { q: '手搖飲 加盟 產業',                       cid: 'news1', nid: 'cnt1' },
-    { q: '50嵐 CoCo都可 珍煮丹 迷客夏', cid: 'news2', nid: 'cnt2' },
-    { q: '台灣消費 飲料市場 手搖飲',     cid: 'news3', nid: 'cnt3' },
-    { q: '台股 飲料 餐飲股票',            cid: 'news4', nid: 'cnt4' },
+  document.getElementById('status-txt').textContent='更新中…';
+  document.getElementById('status-time').textContent='';
+  document.getElementById('summary-text').innerHTML='<span class="spinner" style="display:inline-block;margin-right:8px;"></span> 分析中…';
+  const queries=[
+    {q:'手搖飲 加盟 產業',cid:'news1',nid:'cnt1'},
+    {q:'50嵐 CoCo都可 珍煮丹 迷客夏',cid:'news2',nid:'cnt2'},
+    {q:'台灣消費 飲料市場 手搖飲',cid:'news3',nid:'cnt3'},
+    {q:'台股 飲料 餐飲股票',cid:'news4',nid:'cnt4'},
   ];
-
-  const results = await Promise.allSettled([
+  const results=await Promise.allSettled([
     loadStock(),
-    ...queries.map(({ q, cid, nid }) =>
-      fetchRSS(q).then(items => { renderNews(items, cid, nid); return items; })
-                 .catch(() => { document.getElementById(cid).innerHTML = '<div class="no-data err">資料載入失敗</div>'; return []; })
-    )
+    ...queries.map(({q,cid,nid})=>fetchRSS(q).then(items=>{renderNews(items,cid,nid);return items;}).catch(()=>{document.getElementById(cid).innerHTML='<div class="no-data err">載入失敗，請稍後重試</div>';return [];}))
   ]);
-
-  _allItems = results.slice(1)
-    .map(r => r.status === 'fulfilled' ? r.value : [])
-    .flat();
-
-  const analysis = runAnalysis(_allItems);
-  renderAnalysis(analysis);
-
-  const t = getTWNow();
-  document.getElementById('status-txt').textContent = '資料已更新';
-  document.getElementById('status-time').textContent = `最後更新：${t.timeStr} 台灣時間`;
+  _allItems=results.slice(1).map(r=>r.status==='fulfilled'?r.value:[]).flat();
+  renderAnalysis(runAnalysis(_allItems));
+  const t=getTWNow();
+  document.getElementById('status-txt').textContent='資料已更新';
+  document.getElementById('status-time').textContent=`最後更新：${t.timeStr}`;
 }
 
-// ── Boot ──
+// ══════════════════════════════════════════════════
+//  品牌資料庫 Brand Database
+// ══════════════════════════════════════════════════
+const BRAND_DB = [
+  {
+    id:'50lan', name:'50嵐', emoji:'🟡', color:'#fef9c3',
+    tagline:'全台最大連鎖，超過千家門市',
+    tags:['scale'],
+    founded:'1994', stores:'1,200+', priceRange:'$35–$80',
+    annualRevenue:'約 120 億元（估）', growth:'穩定 +3–5%/年',
+    franchiseAvail:false, franchiseFee:'—', setupCost:'—', royalty:'—',
+    note:'直營模式為主，不對外開放加盟',
+    popularItems:[
+      {name:'四季春珍珠奶茶',share:28},
+      {name:'烏龍奶茶',share:22},
+      {name:'翡翠檸檬',share:18},
+      {name:'珍珠奶綠',share:15},
+      {name:'百香果綠茶',share:10},
+    ],
+    regions:[
+      {name:'北部',pct:52},{name:'中部',pct:22},{name:'南部',pct:20},{name:'東部',pct:6}
+    ],
+    strengths:'口碑老品牌、標準化品質、高人氣',
+    risks:'不開放加盟、選點競爭激烈'
+  },
+  {
+    id:'coco', name:'CoCo都可', emoji:'🟠', color:'#fff7ed',
+    tagline:'國際連鎖，台灣門市密度高',
+    tags:['franchise','scale','intl'],
+    founded:'1997（台灣）', stores:'500+（台灣）', priceRange:'$45–$95',
+    annualRevenue:'約 50 億元（台灣估）', growth:'+8–12%/年',
+    franchiseAvail:true, franchiseFee:'30–50 萬元', setupCost:'150–250 萬元', royalty:'月營業額 5%',
+    note:'提供完整加盟輔導，教育訓練體系完善',
+    popularItems:[
+      {name:'奶茶系列',share:30},
+      {name:'四季春奶茶',share:24},
+      {name:'波霸奶茶',share:20},
+      {name:'芋頭鮮奶',share:14},
+      {name:'多多綠茶',share:8},
+    ],
+    regions:[
+      {name:'北部',pct:45},{name:'中部',pct:25},{name:'南部',pct:24},{name:'東部',pct:6}
+    ],
+    strengths:'加盟體系完整、國際知名度高、SOP 標準化',
+    risks:'加盟費用偏高、同品牌競爭'
+  },
+  {
+    id:'qingxin', name:'清心福全', emoji:'🟢', color:'#f0fdf4',
+    tagline:'老品牌、平價路線、在地深耕',
+    tags:['franchise','budget'],
+    founded:'1987', stores:'700+', priceRange:'$25–$65',
+    annualRevenue:'約 40 億元（估）', growth:'+2–4%/年',
+    franchiseAvail:true, franchiseFee:'15–25 萬元', setupCost:'80–150 萬元', royalty:'固定月費 1.5 萬元',
+    note:'平價市場龍頭，加盟門檻較低',
+    popularItems:[
+      {name:'珍珠奶茶',share:35},
+      {name:'冬瓜茶',share:20},
+      {name:'布丁奶茶',share:18},
+      {name:'烏龍綠茶',share:15},
+      {name:'椰果飲品',share:8},
+    ],
+    regions:[
+      {name:'北部',pct:38},{name:'中部',pct:28},{name:'南部',pct:28},{name:'東部',pct:6}
+    ],
+    strengths:'加盟費低、客群廣、在地信任度高',
+    risks:'品牌老化感、利潤空間薄'
+  },
+  {
+    id:'zhenzhudan', name:'珍煮丹', emoji:'🔴', color:'#fef2f2',
+    tagline:'精品黑糖波霸，近年竄升最快',
+    tags:['franchise','premium'],
+    founded:'2017', stores:'250+', priceRange:'$65–$130',
+    annualRevenue:'約 18 億元（估）', growth:'+25–35%/年',
+    franchiseAvail:true, franchiseFee:'50–80 萬元', setupCost:'200–350 萬元', royalty:'月營業額 6%',
+    note:'高端定位，強調手工現熬黑糖，IG 打卡熱點',
+    popularItems:[
+      {name:'黑糖波霸鮮奶',share:42},
+      {name:'虎珠鮮奶茶',share:25},
+      {name:'黑糖珍珠',share:15},
+      {name:'芝芝黑糖',share:10},
+      {name:'季節限定款',share:5},
+    ],
+    regions:[
+      {name:'北部',pct:55},{name:'中部',pct:20},{name:'南部',pct:18},{name:'東部',pct:7}
+    ],
+    strengths:'品牌聲量強、IG 高曝光、高客單價',
+    risks:'初期投資高、趨勢型風險、同質競品多'
+  },
+  {
+    id:'chatang', name:'茶湯會', emoji:'🫖', color:'#f5f3ff',
+    tagline:'茗茶為本，中高端定位',
+    tags:['franchise','premium'],
+    founded:'2009', stores:'450+', priceRange:'$55–$110',
+    annualRevenue:'約 30 億元（估）', growth:'+10–15%/年',
+    franchiseAvail:true, franchiseFee:'40–60 萬元', setupCost:'180–280 萬元', royalty:'月營業額 5.5%',
+    note:'強調台灣好茶原葉沖泡，品茶文化定位',
+    popularItems:[
+      {name:'四季烏龍',share:30},
+      {name:'茉莉綠茶拿鐵',share:22},
+      {name:'阿薩姆奶茶',share:20},
+      {name:'桂花烏龍',share:15},
+      {name:'冷泡茗茶',share:10},
+    ],
+    regions:[
+      {name:'北部',pct:48},{name:'中部',pct:22},{name:'南部',pct:23},{name:'東部',pct:7}
+    ],
+    strengths:'品質定位鮮明、回購率高',
+    risks:'目標客群相對窄、選點要求高'
+  },
+  {
+    id:'milksha', name:'迷客夏', emoji:'🥛', color:'#eff6ff',
+    tagline:'鮮奶茶專家，品質口碑佳',
+    tags:['franchise','premium'],
+    founded:'2014', stores:'380+', priceRange:'$60–$120',
+    annualRevenue:'約 22 億元（估）', growth:'+15–20%/年',
+    franchiseAvail:true, franchiseFee:'45–70 萬元', setupCost:'180–300 萬元', royalty:'月營業額 5%',
+    note:'強調每日鮮奶、無添加，健康飲品訴求強',
+    popularItems:[
+      {name:'特調鮮奶茶',share:38},
+      {name:'四季春鮮奶',share:25},
+      {name:'抹茶鮮奶',share:16},
+      {name:'波霸鮮奶',share:12},
+      {name:'季節水果茶',share:7},
+    ],
+    regions:[
+      {name:'北部',pct:50},{name:'中部',pct:22},{name:'南部',pct:22},{name:'東部',pct:6}
+    ],
+    strengths:'健康形象強、客單高、品牌年輕化',
+    risks:'鮮奶成本高、供應鏈要求嚴'
+  },
+  {
+    id:'yifang', name:'一芳', emoji:'🍑', color:'#fff7ed',
+    tagline:'台灣水果茶，走向國際市場',
+    tags:['franchise','intl'],
+    founded:'2015', stores:'250+（台灣）', priceRange:'$55–$100',
+    annualRevenue:'約 15 億元（台灣估）', growth:'+12–18%/年',
+    franchiseAvail:true, franchiseFee:'40–60 萬元', setupCost:'160–260 萬元', royalty:'月營業額 5%',
+    note:'以台灣在地水果為特色，已拓展至中國、東南亞、日本',
+    popularItems:[
+      {name:'台灣水果茶',share:40},
+      {name:'鳳梨四季春',share:22},
+      {name:'芒果青茶',share:18},
+      {name:'百香果綠茶',share:12},
+      {name:'草莓多多',share:5},
+    ],
+    regions:[
+      {name:'北部',pct:44},{name:'中部',pct:24},{name:'南部',pct:24},{name:'東部',pct:8}
+    ],
+    strengths:'差異化強、國際化成功、水果茶熱潮',
+    risks:'季節性食材供應不穩、海外競爭激烈'
+  },
+];
+
+// Render brand cards
+let currentFilter = 'all';
+function renderBrands(list) {
+  const container = document.getElementById('brand-list');
+  if (!list.length) { container.innerHTML = '<div class="no-data" style="padding:24px;">找不到符合條件的品牌</div>'; return; }
+  container.innerHTML = list.map(b => `
+    <div class="brand-card" data-tags="${b.tags.join(',')}" data-name="${b.name}">
+      <div class="brand-card-header">
+        <div class="brand-avatar" style="background:${b.color}">${b.emoji}</div>
+        <div class="brand-card-info">
+          <div class="brand-card-name">${esc(b.name)}</div>
+          <div class="brand-card-tagline">${esc(b.tagline)}</div>
+          <div class="brand-card-badges">
+            ${b.tags.includes('scale')?'<span class="brand-badge badge-scale">大規模</span>':''}
+            ${b.tags.includes('franchise')?'<span class="brand-badge badge-franchise">可加盟</span>':''}
+            ${b.tags.includes('premium')?'<span class="brand-badge badge-premium">精品</span>':''}
+            ${b.tags.includes('intl')?'<span class="brand-badge badge-intl">國際</span>':''}
+            ${b.tags.includes('budget')?'<span class="brand-badge badge-budget">平價</span>':''}
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-metrics">
+        <div class="metric-box">
+          <div class="metric-label">創立年份</div>
+          <div class="metric-value">${esc(b.founded)}</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">門市數量</div>
+          <div class="metric-value">${esc(b.stores)}</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">年營收（估）</div>
+          <div class="metric-value" style="font-size:13px;">${esc(b.annualRevenue)}</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">客單價</div>
+          <div class="metric-value">${esc(b.priceRange)}</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">年成長率</div>
+          <div class="metric-value" style="font-size:12px;color:var(--green);">${esc(b.growth)}</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">加盟可否</div>
+          <div class="metric-value" style="font-size:13px;color:${b.franchiseAvail?'var(--green)':'var(--muted)'};">${b.franchiseAvail?'✅ 可加盟':'❌ 不開放'}</div>
+        </div>
+      </div>
+
+      <div class="brand-detail-grid">
+        <div class="detail-box">
+          <div class="detail-title">🧋 熱門品項排行</div>
+          ${b.popularItems.map(item=>`
+            <div style="display:flex;align-items:center;gap:6px;font-size:12px;margin-bottom:6px;">
+              <span style="color:var(--text-sub);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(item.name)}</span>
+              <div class="detail-bar-wrap" style="width:60px;flex:none;"><div class="detail-bar" style="width:${item.share}%"></div></div>
+              <span style="color:var(--muted);width:28px;text-align:right;">${item.share}%</span>
+            </div>`).join('')}
+        </div>
+        <div class="detail-box">
+          <div class="detail-title">🗺️ 各地區銷售佔比（估）</div>
+          ${b.regions.map(r=>`
+            <div class="region-item">
+              <span class="region-name">${esc(r.name)}</span>
+              <div class="region-bar-wrap"><div class="region-bar" style="width:${r.pct}%"></div></div>
+              <span class="region-pct">${r.pct}%</span>
+            </div>`).join('')}
+          <div style="font-size:10px;color:var(--muted);margin-top:8px;">※ 依門市分佈估算，僅供參考</div>
+        </div>
+      </div>
+
+      ${b.franchiseAvail ? `
+      <div class="franchise-box">
+        <div class="franchise-title">💼 加盟條件摘要</div>
+        <div class="franchise-row"><span class="franchise-key">加盟金</span><span class="franchise-val">${esc(b.franchiseFee)}</span></div>
+        <div class="franchise-row"><span class="franchise-key">開店總費用</span><span class="franchise-val">${esc(b.setupCost)}</span></div>
+        <div class="franchise-row"><span class="franchise-key">權利金</span><span class="franchise-val">${esc(b.royalty)}</span></div>
+        <div class="franchise-row"><span class="franchise-key">備註</span><span class="franchise-val" style="text-align:right;max-width:200px;">${esc(b.note)}</span></div>
+      </div>` : `<div style="font-size:12px;color:var(--muted);padding:8px 0;">ℹ️ ${esc(b.note)}</div>`}
+
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:var(--green-bg);border-radius:7px;padding:8px 10px;">
+          <div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:3px;">✅ 優勢</div>
+          <div style="font-size:11px;color:var(--text-sub);">${esc(b.strengths)}</div>
+        </div>
+        <div style="background:var(--red-bg);border-radius:7px;padding:8px 10px;">
+          <div style="font-size:10px;font-weight:700;color:var(--red);margin-bottom:3px;">⚠️ 風險</div>
+          <div style="font-size:11px;color:var(--text-sub);">${esc(b.risks)}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterBrands() {
+  const q = document.getElementById('brand-search').value.toLowerCase();
+  const filtered = BRAND_DB.filter(b => {
+    const matchSearch = !q || b.name.toLowerCase().includes(q) || b.tagline.includes(q);
+    const matchFilter = currentFilter === 'all' || b.tags.includes(currentFilter);
+    return matchSearch && matchFilter;
+  });
+  renderBrands(filtered);
+}
+
+function setBpFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.bp-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterBrands();
+}
+
+// Boot
+renderBrands(BRAND_DB);
 loadAll();
-setInterval(loadAll, 10 * 60 * 1000);
+setInterval(loadAll, 10*60*1000);
 </script>
 </body>
 </html>
